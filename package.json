@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/material": "^5.15.19",
     "@nextui-org/react": "^2.4.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.4.0",
@@ -16,6 +19,7 @@
     "crypto-ts": "^1.0.2",
     "framer-motion": "^11.2.10",
     "jsonwebtoken": "^9.0.2",
+    "magnify-zone": "^1.7.4",
     "mongodb": "^6.7.0",
     "mongoose": "^8.4.1",
     "next": "14.2.3",

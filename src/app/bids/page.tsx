@@ -14,17 +14,18 @@ import { SearchIcon } from "../SearchIcon";
 function Bids() {
   const [selected, setSelected] = useState<boolean>(false);
   const [init, setInit] = useState<boolean>(true);
-
   let [value, setValue] = useState({
     start: today(getLocalTimeZone()),
     end: today(getLocalTimeZone()).add({ weeks: 1 }),
   });
+  const [searchpn,setSearchpn] = useState<string>("")
+  const [searchsn,setSearchsn] = useState<string>("")
   interface Category {
     key: number;
     label: string;
     value: string;
   }
-  interface Bid {
+  interface Bid {     
     userID: string;
     productID: string;
     image: Array<Object>;
@@ -47,7 +48,6 @@ function Bids() {
       });
       if (response) {
         const data = await response.json();
-        console.log(data.products);
         setBids(data.products);
       }
     } catch (e) {
@@ -57,6 +57,11 @@ function Bids() {
   useEffect(() => {
     getBids();
   }, []);
+  // if(searchpn!=""){
+  // for(let i=0;i<bids.length;i++){
+  //   if(bids[i].name.includes(searchpn))
+  // }
+  // }
 
   if (init) {
     return (
@@ -122,6 +127,8 @@ function Bids() {
                 placeholder="Type to search..."
                 size="md"
                 type="search"
+                value={searchpn}
+                onChange={(e) => setSearchpn(e.target.value)}
                 startContent={<SearchIcon />}
               />
             </div>
@@ -137,6 +144,8 @@ function Bids() {
                     "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
                 }}
                 placeholder="Type to search..."
+                value={searchsn}
+                onChange={(e) => setSearchsn(e.target.value)}
                 size="md"
                 type="search"
                 startContent={<SearchIcon />}
@@ -188,10 +197,10 @@ function Bids() {
               >
                 <Image
                   src={bid.image[0].url}
-                  // width={300}
-                  // height={300}
-                  className="w-full"
-                  style={{ borderRadius: "5px",width:'300px',height:'250px' }}
+                  // width={200}
+                  // height={200}
+                  className="w-full h-1/2"
+                  style={{ borderRadius: "5px"}}
                   alt="hello"
                 />
                 <div
@@ -222,7 +231,7 @@ function Bids() {
                     Buy Now
                   </Button>
                   <Button variant="ghost" color="danger">
-                    <Link passHref={true} href={`/product/1`}>
+                    <Link passHref={true} href={{pathname:`/bids/${bid.productID}`,query:{id:bid.productID}}}>
                       More Details
                     </Link>
                   </Button>

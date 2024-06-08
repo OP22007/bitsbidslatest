@@ -1,8 +1,10 @@
 'use client';
 
 import React,{useState} from "react";
-import {Navbar, NavbarBrand, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, NavbarContent, NavbarItem, Link, Button,Input,Checkbox,RangeCalendar,Dropdown,DropdownItem,DropdownMenu,DropdownTrigger,Avatar} from "@nextui-org/react";
+import {Navbar, NavbarBrand, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, NavbarContent, NavbarItem, Link, Button,Input,Checkbox,RangeCalendar,Dropdown,DropdownItem,DropdownMenu,DropdownTrigger} from "@nextui-org/react";
 // import {AcmeLogo} from "./AcmeLogo.jsx";
+import { Avatar } from "@mui/material";
+// import { Avatar } from "@nextui-org/react";
 import { categories } from "../categories";
 // import { SearchIcon } from "@/pages/SearchIcon";
 import { today, getLocalTimeZone } from "@internationalized/date";
@@ -42,7 +44,35 @@ export default function App() {
     "Help & Feedback",
     "Log Out",
   ];
-
+  function stringToColor(string: string) {
+    let hash = 0;
+    let i;
+  
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+  
+    let color = '#';
+  
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+  
+    return color;
+  }
+  
+  function stringAvatar(name: string) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(' ')[0][0].toLocaleUpperCase()}`,
+    };
+  }
+  
   return (
     <Navbar
       isBordered
@@ -99,23 +129,18 @@ export default function App() {
               isBordered
               as="button"
               className="transition-transform"
-              color="secondary"
-              name="Jason Hughes"
-              size="sm"
-              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+              // color="secondary"
+              // size="sm"
+              {...stringAvatar(`${user.name}`)}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">{user.name}</p>
+            <DropdownItem key="profile" color="success" className="h-14 gap-1">
+              <p className="font-semibold">Signed in as <span className="font-extrabold text-lg mx-1">{user.name}</span></p>
             </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
-            <DropdownItem key="team_settings">Team Settings</DropdownItem>
-            <DropdownItem key="analytics">Analytics</DropdownItem>
-            <DropdownItem key="system">System</DropdownItem>
-            <DropdownItem key="configurations">Configurations</DropdownItem>
-            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
+            <DropdownItem key="profile" color="warning">My Profile</DropdownItem>
+            <DropdownItem key="update_profile" color="warning" >Update Profile</DropdownItem>
+            <DropdownItem key="bids" color="warning">My Bids</DropdownItem>
             <DropdownItem onClick={()=>{signOut()}} key="logout" color="danger">
               Log Out
             </DropdownItem>
