@@ -6,12 +6,21 @@ import { Image } from "@nextui-org/image";
 import UserList from "../components/userList";
 import { Button } from "@nextui-org/react";
 export default function Chat() {
+
+ const [name,setName]=useState("Click to Open Chat ");
+ const [email,setEmail]=useState(" Users Email appeares here");
+ const handleData =   (username:string, useremail:string)=>{
+  setName(username);
+ setEmail(useremail);
+  // console.log(name+ " "+email)
+ }
  
     {
         return (
             <>
           <div id="chatbox">
               {/* main grad desktop  */}
+              
               <div className="grads ">
                 <div
                   aria-hidden="true"
@@ -60,33 +69,32 @@ export default function Chat() {
                   />
                 </div>
               </div>
-        
               <div className="flex w-full justify-center  xl:justify-start ">
                 <div className="flex mt-5 w-8/12 min-w-2xl sm:max-w-xl xl:w-3/12  xl:ml-10 overflow-y-scroll">
-                  <div className="flex flex-col  w-full  xl:items-start   p-2 bg-black">
+                  <div className="flex flex-col  w-full  xl:items-start  z-10 p-2 bg-transparent">
                     <p className="text-xl  font-bold ml-1">Chats</p>
-                    <UserList></UserList>
+                    <UserList  sendUserProfile={handleData}></UserList>
                   </div>
                 </div>
                 <div className=" hidden right-8 fixed xl:w-8/12 overflow-y-auto  h-screen xl:flex items-center ml-4 ">
                   <div className=" flex flex-col w-full h-5/6 overflow-y-scroll bg-black/30 backdrop-blur-3xl mb-10 p-2 mt-2 rounded-xl ">
                     <div className="w-full bg-transparent border-b-1 border-gray-800 rounded-sm  p-2">
                     <User   
-              name="Jane Doe"
-              description="Product Designer"
+              name={name}
+              description={email}
               avatarProps={{
-                src: "https://i.pravatar.cc/150?u=a04258114e29026702d"
+                color:'primary'
               }}
             />
            
                     </div>
                      
-        <div className="flex top-14  gap-2.5">
+        {/* <div className="flex top-14  gap-2.5">
         <div className="flex flex-col leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
                  <p className="text-sm font-normal text-gray-900 dark:text-white"> That's awesome. I think our users will really appreciate the improvements.</p>
               </div>
         </div>
-        
+         */}
                 
                     <div className="w-11/12 right-8 bottom-4 flex fixed  h-12 flex-wrap flex-wrap-reverse items-center  justify-start">
                       <Textarea

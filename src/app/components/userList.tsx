@@ -8,9 +8,10 @@ import { useState,useEffect } from "react";
 // some pre processing in list to personalise list for each user
 
 
-    console.log(samplejson.users[0].first_name);
 
-export default function App() {
+export default function App({sendUserProfile}){
+ 
+   
     interface User {     
         userID: string;
         name: string;
@@ -18,6 +19,13 @@ export default function App() {
         phone: Number;
         email: string;
       }
+    
+  
+      const OpenChat = async(name:string, email:string)=>{
+        
+                await  sendUserProfile(name, email);
+      }
+     
 const [users,setUsers]= useState<Array<User>>([]);
 const getUsers =async ()=>{
   try {
@@ -26,7 +34,7 @@ const getUsers =async ()=>{
     })
     if(responce){
         const data = await responce.json();
-        console.log(data);
+      //  console.log(data);
         setUsers(data.users)
 
     }
@@ -42,23 +50,26 @@ const getUsers =async ()=>{
   },[]);
   return (
     <>
-    <div id="userList" className="userlist mt-2 ">
+    <div id="userList flex flex-col" className="userlist mt-2 ">
      
     {
         users.map((element)=>(
-            <div className="mb-4 p-2 rounded-xl" >
+           
+            <div className="mb-4  p-2 rounded-xl" onClick={()=>{OpenChat(element.name, element.email)}}>
             
               
                 <User   
              name={element.name}
              description={element.email}
+            
              avatarProps={{
-               src: `http://dummyimage.com/157x100.png/cc0000/ffffff`
+             color:"primary"
              }}
-           />
+           onClick={()=>{OpenChat(element.name, element.email)}}></User>
                
            </div>
         ))
+     
     }
    
   
