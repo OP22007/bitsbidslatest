@@ -8,8 +8,8 @@ export async function POST(req:NextRequest){
     const session = await getServerSession(options)
     console.log(session)
     const productID = nanoid()
-    const { image,name, description,category } = await req.json();
-    if (!image||!name||!description||!category) {
+    const { image,name,price, description,category } = await req.json();
+    if (!image||!name||!description||!category||!price) {
         return new Response(JSON.stringify({ message: 'The fields name,description and category are required' }))
     }
     
@@ -24,6 +24,7 @@ export async function POST(req:NextRequest){
         productID,
         image,
         name,
+        price,
         description,
         category
     };
@@ -33,6 +34,7 @@ export async function POST(req:NextRequest){
                 productID: productInput.productID,
                 image:productInput.image,
                 name: productInput.name,
+                price:productInput.price,
                 description: productInput.description,
                 category: productInput.category,
           });

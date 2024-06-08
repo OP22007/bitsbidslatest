@@ -35,13 +35,14 @@ function Uploadproduct() {
   // const [ctg,setCtg] = useState<string>("")
   const [categor, setCategory] = useState<number>(0);
   const [name, setName] = useState<string>("");
+  const [price, setPrice] = useState<number>(0);
   const [description, setDescription] = useState<string>("");
   // console.log(categories[category - 1]);
   const onSubmitForm = async(e:InputEvent) => {
     e.preventDefault();
       const category = categories[categor-1].value
       const image = images
-      const body = {image,name,description,category};
+      const body = {image,name,price,description,category};
       console.log(body)
       const res = await fetch("http://localhost:3000/api/uploadproduct", {
         method: "POST",
@@ -57,6 +58,7 @@ function Uploadproduct() {
       }
       setName('')
       setDescription('')
+      setPrice(0)
       setImages([])
       setCategory(0)
   };
@@ -295,6 +297,21 @@ console.log(images)
                 type="text"
                 size="md"
                 placeholder="Enter product name"
+              />
+            </div>
+            <div className="price mb-5">
+              <h1 className="font-extrabold text-xl md:text-2xl  mb-4">
+                Product Price
+              </h1>
+              <Input
+                color="success"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                className="w-96 "
+                variant="bordered"
+                type="text"
+                size="md"
+                placeholder="Enter bid start price"
               />
             </div>
             <div className="description mb-5">

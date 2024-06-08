@@ -5,6 +5,7 @@ type ProductDocument = Document & {
   productID:string;
   image:Array<Object>;
   name: string;
+  price:number;
   description:string;
   category:string;
 };
@@ -14,6 +15,7 @@ type ProductInput = {
   productID : ProductDocument['productID'];
   image : ProductDocument['image'];
   name: ProductDocument['name'];
+  price:ProductDocument['price']
   description: ProductDocument['description']
   category: ProductDocument['category']
 };
@@ -36,6 +38,10 @@ const productsSchema = new Schema(
     name: {
       type: Schema.Types.String,
       required: true,
+    },
+    price:{
+      type:Schema.Types.String,
+      required:true
     },
     description: {
       type: Schema.Types.String,

@@ -1,27 +1,16 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import car from "../../../public/car.jpg";
-import { Input,Checkbox, Button } from "@nextui-org/react";
+import { Input, Checkbox, Button,Image } from "@nextui-org/react";
 import { HeartIcon } from "../HeartIcon";
 import Link from "next/link";
 import { RangeCalendar } from "@nextui-org/react";
 import { today, getLocalTimeZone } from "@internationalized/date";
 import { categories } from "../categories";
 import { useEffect, useMemo } from "react";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import grad1 from '../../public/grad1.jpg'
+import grad1 from "../../public/grad1.jpg";
 import { SearchIcon } from "../SearchIcon";
-import {
-  type Container,
-  type ISourceOptions,
-  MoveDirection,
-  OutMode,
-} from "@tsparticles/engine";
-// import { loadAll } from "@tsparticles/all"; // if you are going to use `loadAll`, install the "@tsparticles/all" package too.
-// import { loadFull } from "tsparticles"; // if you are going to use `loadFull`, install the "tsparticles" package too.
-import { loadSlim } from "@tsparticles/slim"; // if you are going to use `loadSlim`, install the "@tsparticles/slim" package too.
 function Bids() {
   const [selected, setSelected] = useState<boolean>(false);
   const [init, setInit] = useState<boolean>(true);
@@ -35,12 +24,40 @@ function Bids() {
     label: string;
     value: string;
   }
+  interface Bid {
+    userID: string;
+    productID: string;
+    image: Array<Object>;
+    name: string;
+    description: string;
+    category: string;
+    price: number;
+  }
   const [isLoaded, setIsLoaded] = React.useState(false);
 
   const toggleLoad = () => {
     setIsLoaded(true);
   };
-  const myTimeout = setTimeout(toggleLoad,500)
+  const myTimeout = setTimeout(toggleLoad, 500);
+  const [bids, setBids] = useState<Array<Bid>>([]);
+  const getBids = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/getbids", {
+        method: "GET",
+      });
+      if (response) {
+        const data = await response.json();
+        console.log(data.products);
+        setBids(data.products);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    getBids();
+  }, []);
+
   if (init) {
     return (
       <div>
@@ -92,20 +109,38 @@ function Bids() {
         <div className="flex mt-10 z-16">
           <div className="left-menu xl:ml-16">
             <div className="hidden xl:flex flex-col my-8 mr-8 date">
-              <h1 className="font-extrabold text-xl mb-4">Search By Product Name</h1>
-              <Input classNames={{
-                base: "max-w-full h-10",
-                input: "text-small",
-                inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-              }} placeholder="Type to search..." size='md' type="search" startContent={<SearchIcon/>}/>
+              <h1 className="font-extrabold text-xl mb-4">
+                Search By Product Name
+              </h1>
+              <Input
+                classNames={{
+                  base: "max-w-full h-10",
+                  input: "text-small",
+                  inputWrapper:
+                    "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+                }}
+                placeholder="Type to search..."
+                size="md"
+                type="search"
+                startContent={<SearchIcon />}
+              />
             </div>
             <div className="hidden xl:flex flex-col my-8 mr-8 date">
-              <h1 className="font-extrabold text-xl mb-4">Search By Seller Name</h1>
-              <Input classNames={{
-                base: "max-w-full h-10",
-                input: "text-small",
-                inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-              }} placeholder="Type to search..." size='md' type="search" startContent={<SearchIcon/>}/>
+              <h1 className="font-extrabold text-xl mb-4">
+                Search By Seller Name
+              </h1>
+              <Input
+                classNames={{
+                  base: "max-w-full h-10",
+                  input: "text-small",
+                  inputWrapper:
+                    "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+                }}
+                placeholder="Type to search..."
+                size="md"
+                type="search"
+                startContent={<SearchIcon />}
+              />
             </div>
             <div className="hidden xl:flex flex-col my-8 mr-8 date">
               <h1 className="font-extrabold text-xl mb-4">Filter By Date</h1>
@@ -114,7 +149,7 @@ function Bids() {
                 aria-label="Data (Controlled)"
                 value={value}
                 onChange={setValue}
-                style={{border: "solid #272829",borderWidth:'thin'}}
+                style={{ border: "solid #272829", borderWidth: "thin" }}
               />
             </div>
             <div className="hidden xl:flex flex-col category">
@@ -135,13 +170,72 @@ function Bids() {
               ))}
             </div>
           </div>
-          <div className="flex flex-col flex-wrap bids xl:flex-row overflow-x-hidden" style={{alignItems:'center'}}>
+          <div
+            className="flex flex-col flex-wrap bids xl:flex-row overflow-x-hidden"
+            style={{ alignItems: "center" }}
+          >
+            {bids.map((bid: Bid) => (
+              <div
+                key={bid.productID}
+                className="flex flex-col baseinfo h-fit mx-4 my-2 p-5"
+                style={{
+                  border: "solid #272829",
+                  width: "340px",
+                  // padding: "14px",
+                  borderWidth: "thin",
+                  borderRadius: "5px",
+                }}
+              >
+                <Image
+                  src={bid.image[0].url}
+                  // width={300}
+                  // height={300}
+                  className="w-full"
+                  style={{ borderRadius: "5px",width:'300px',height:'250px' }}
+                  alt="hello"
+                />
+                <div
+                  className="flex justify-between name font-extrabold my-4 text-2xl"
+                  style={{ alignItems: "center" }}
+                >
+                  <h1>{bid.name}</h1>
+                  <Button
+                    isIconOnly
+                    color="danger"
+                    aria-label="Like"
+                    startContent={<HeartIcon />}
+                    style={{ color: "white" }}
+                  ></Button>
+                </div>
+                <div
+                  className="price font-extrabold text-2xl"
+                  style={{
+                    background: "linear-gradient(45deg, cyan, yellow)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  Rs {bid.price}
+                </div>
+                <div className="buttons flex justify-around mx-8 mt-8">
+                  <Button variant="ghost" color="success">
+                    Buy Now
+                  </Button>
+                  <Button variant="ghost" color="danger">
+                    <Link passHref={true} href={`/product/1`}>
+                      More Details
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            ))}
+
             <div
               // key={item.prodId}
               className="flex flex-col baseinfo h-fit mx-4 my-2 p-5"
               style={{
                 border: "solid #272829",
-                width:'340px',
+                width: "340px",
                 // padding: "14px",
                 borderWidth: "thin",
                 borderRadius: "5px",
@@ -158,9 +252,13 @@ function Bids() {
                 style={{ alignItems: "center" }}
               >
                 <h1>Electric Kettle</h1>
-                <Button isIconOnly color="danger" aria-label="Like" startContent={<HeartIcon/>} style={{color:'white'}}>
-                  
-                </Button>
+                <Button
+                  isIconOnly
+                  color="danger"
+                  aria-label="Like"
+                  startContent={<HeartIcon />}
+                  style={{ color: "white" }}
+                ></Button>
               </div>
               <div
                 className="price font-extrabold text-2xl"
@@ -188,7 +286,7 @@ function Bids() {
               className="flex flex-col baseinfo h-fit mx-4 my-2 p-5"
               style={{
                 border: "solid #272829",
-                width:'340px',
+                width: "340px",
                 // padding: "14px",
                 borderWidth: "thin",
                 borderRadius: "5px",
@@ -235,7 +333,7 @@ function Bids() {
               className="flex flex-col baseinfo h-fit mx-4 my-2 p-5"
               style={{
                 border: "solid #272829",
-                width:'340px',
+                width: "340px",
                 // padding: "14px",
                 borderWidth: "thin",
                 borderRadius: "5px",
@@ -282,7 +380,7 @@ function Bids() {
               className="flex flex-col baseinfo h-fit mx-4 my-2 p-5"
               style={{
                 border: "solid #272829",
-                width:'340px',
+                width: "340px",
                 // padding: "14px",
                 borderWidth: "thin",
                 borderRadius: "5px",
