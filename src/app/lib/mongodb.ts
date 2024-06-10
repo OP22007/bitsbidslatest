@@ -2,7 +2,11 @@ import { error } from "console";
 import { MongoClient } from "mongodb";
 
 const URI = process.env.MONGODB_URI
-const options={}
+const options={
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    socketTimeoutMS: 30000 
+}
 if(!URI) throw new Error("Please add MONGO URI to the env file")
 let client 
 let clientPromise:Promise<MongoClient>

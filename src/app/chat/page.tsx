@@ -1,19 +1,87 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import { User } from "@nextui-org/react";
+import ChatModel,{Message,ChatDocument,Conversation,ChatInput} from "../../../models/chat.models";
 import { Textarea } from "@nextui-org/input";
 import { Image } from "@nextui-org/image";
 import UserList from "../components/userList";
 import { Button } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 export default function Chat() {
-
+  const session = useSession()
+  const [chats,setChats]= useState();
  const [name,setName]=useState("Click to Open Chat ");
+ const [inputValue, setInputValue] = useState<string>('');
  const [email,setEmail]=useState(" Users Email appeares here");
  const handleData =   (username:string, useremail:string)=>{
   setName(username);
  setEmail(useremail);
+ fetchChats();
   // console.log(name+ " "+email)
  }
+ const fetchChats =async()=>{
+  if(session)
+    {
+
+
+  console.log("here fetch")
+  try {
+    const response = await fetch(`http://localhost:3000/api/getchats?email=${encodeURIComponent(email)}`, {
+      method: "GET",
+    
+    });
+    if (response) {
+      const data = await response.json();
+      setChats(data.chatBlock);
+      console.log(data)
+    }
+  } catch (e) {
+    console.log(e);
+  }
+ }
+}
+
+ const Send= async()=>{
+
+  if (inputValue === "null" || inputValue ===" ")
+    {
+         alert("Cannot send an empty text")
+    }
+    const user:String = session.data?.user?.name || '';
+    const senderEmail:String = session.data?.user?.email || '';
+    
+  //console.log(user, senderEmail)
+
+    console.log("sent something")
+    const myChat = {
+        username:`${user}`,
+        userEmail: `${senderEmail}`,
+        conversation: [
+          {
+            participantName: `${name}`,
+            participantEmail: `${email}`,
+            messages: [
+              {
+                content: `${inputValue}`,
+                timestamp:`${new Date().toISOString()}`,
+                sender: `${user}`
+              },
+            
+
+            ]
+          },
+
+        ]
+      };
+    const res = await fetch("http://localhost:3000/api/addchats", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(myChat)
+      });
+      setInputValue("");
+       }
+
+  
  
     {
         return (
@@ -85,6 +153,7 @@ export default function Chat() {
               avatarProps={{
                 color:'primary'
               }}
+              onChange={()=>{fetchChats()}}
             />
            
                     </div>
@@ -102,13 +171,16 @@ export default function Chat() {
                         minRows={1}
                         maxRows={5}
                         style={{}}
+                        value={inputValue}
+                        onChange={(event)=>{setInputValue(event.target.value);}}
                       ></Textarea>
                       <div className="options flex items-center justify-around w-1/12 h-12">
                         <Button
-                          className="send h-9 ml-2"
+                          className="send h-9 ml-2 z-11 "
                           isIconOnly
                           color="success"
                           aria-label="Like"
+                          onClick={()=>{Send()}}
                         >
                           <Image src="send2.png"></Image>
                         </Button>
