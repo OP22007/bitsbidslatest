@@ -3,8 +3,9 @@
 import React,{useState} from "react";
 import {Navbar, NavbarBrand, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, NavbarContent, NavbarItem, Link, Button,Input,Checkbox,RangeCalendar,Dropdown,DropdownItem,DropdownMenu,DropdownTrigger} from "@nextui-org/react";
 // import {AcmeLogo} from "./AcmeLogo.jsx";
-import { Avatar } from "@mui/material";
-// import { Avatar } from "@nextui-org/react";
+// import { Avatar } from "@mui/material";
+import Avatar2 from "@mui/material";
+import { Avatar } from "@nextui-org/react";
 import { categories } from "../categories";
 // import { SearchIcon } from "@/pages/SearchIcon";
 import { today, getLocalTimeZone } from "@internationalized/date";
@@ -23,6 +24,7 @@ export default function App() {
   const [init, setInit] = useState<boolean>(true);
   const session = useSession()
   const user = session.data?.user
+  console.log(user?.image)
   let [value, setValue] = useState({
     start: today(getLocalTimeZone()),
     end: today(getLocalTimeZone()).add({ weeks: 1 }),
@@ -122,10 +124,36 @@ export default function App() {
           </Button>
         </NavbarItem>
       </NavbarContent>}
-      {user&&<NavbarContent as="div" justify="end">
+      {user?.image&&<NavbarContent as="div" justify="end">
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Avatar
+              isBordered
+              as="button"
+              className="transition-transform"
+              src={user.image}
+              // color="secondary"
+              // size="sm"
+              // {...stringAvatar(`${user.name}`)}
+            />
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Profile Actions" variant="flat">
+            <DropdownItem key="profile" color="success" className="h-14 gap-1">
+              <p className="font-semibold">Signed in as <span className="font-extrabold text-lg mx-1">{user.name}</span></p>
+            </DropdownItem>
+            <DropdownItem key="profile" color="warning">My Profile</DropdownItem>
+            <DropdownItem key="update_profile" color="warning" >Update Profile</DropdownItem>
+            <DropdownItem key="bids" color="warning">My Bids</DropdownItem>
+            <DropdownItem onClick={()=>{signOut()}} key="logout" color="danger">
+              Log Out
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </NavbarContent>}
+      {user&&!(user?.image)&&<NavbarContent as="div" justify="end">
+        <Dropdown placement="bottom-end">
+          <DropdownTrigger>
+            <Avatar2
               isBordered
               as="button"
               className="transition-transform"

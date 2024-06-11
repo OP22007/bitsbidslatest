@@ -214,7 +214,7 @@ const App = () => {
           options={options}
         />
         <div
-          className="flex flex-col justify-center mt-10 xl:mt-16"
+          className="flex flex-col justify-center mt-10 xl:mt-16 mb-20"
           style={{ alignItems: "center" }}
         >
             <Card className="w-full p-4 xl:p-4 mt-10 w-3/10 z-20 " style={{ alignItems: "center" }}>
@@ -259,6 +259,21 @@ const App = () => {
                   LOGIN
                 </Button>
               </form>
+              <div className="google flex flex-col items-center">
+                <div className="font-extrabold text-2xl mt-4">OR</div>
+                <Button
+                  className="mt-4 w-full xl:w-96"
+                  type="submit"
+                //   color="success"
+                  style={{
+                    color: "white",
+                    // width: "400px",
+                    borderRadius: "20px",
+                    background: 'linear-gradient(90deg,  rgba(3,86,147,1) 0%,rgba(1,213,22,1) 100%)'
+                }}
+                onClick={()=>signIn("google")}
+                >Sign In With Google</Button>
+              </div>
               <p className="mt-5 mb-5">
                 Don{"'"}t have an account?{" "}
                 <Link href="/signup">

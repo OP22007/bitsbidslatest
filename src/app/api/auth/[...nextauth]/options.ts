@@ -4,6 +4,9 @@ import clientPromise from "@/app/lib/mongodb";
 var CryptoTS = require("crypto-ts");
 import { NextRequest } from "next/server";
 import { AES } from "crypto-ts";
+import GoogleProvider from "next-auth/providers/google";
+import { nanoid } from "nanoid";
+
 export const options:NextAuthOptions = {
     session:{
         strategy:'jwt',
@@ -49,8 +52,39 @@ export const options:NextAuthOptions = {
                     console.log("Error: ", error);
                 }
             }
+        }),GoogleProvider({
+            clientId:process.env.GOOGLE_CLIENT_ID!,
+            clientSecret:process.env.GOOGLE_CLIENT_SECRET!,
         })
     ],
+    callbacks:{
+        async signIn({account,profile}){
+            if(account?.provider=='credentials'){
+                return true
+            }
+            if(account?.provider=='google'){
+            if(!profile?.name){
+                throw new Error('No profile')
+            }
+            const client = await clientPromise
+            const db = client.db("BITSBids");
+            let user = await db
+            .collection("users")
+            .findOne({ email: profile.email });
+            if(!user){
+                let u = await db.collection("users").insertOne({
+                    userId: nanoid(),
+                    name: profile.name,
+                    age: 0,
+                    phone:0,
+                    email: profile.email,
+                password: "oauth user",
+              });
+            }
+            return true
+        }
+        }
+    },
     pages:{
         signIn:'/login'
     },

@@ -6,18 +6,61 @@ import { Textarea } from "@nextui-org/input";
 import { Image } from "@nextui-org/image";
 import UserList from "../components/userList";
 import { Button } from "@nextui-org/react";
+<<<<<<< HEAD
 import { useSession } from "next-auth/react";
 export default function Chat() {
   const session = useSession()
   const [chats,setChats]= useState();
+=======
+import { io } from "socket.io-client";
+import { useSession } from 'next-auth/react';
+import { Socket } from "socket.io";
+export default function Chat() {
+  const session = useSession()
+  const user = session.data?.user
+  const socket = io('http://localhost:3001',{autoConnect:false})
+ const [inbox,setInbox] = useState<any>([])
+ const [message,setMessage] = useState<string>("")
+ const [roomName,setRoomName] = useState("")
+>>>>>>> 0e5f718 (Added Google OAuth now users can login both by Google and Credentials)
  const [name,setName]=useState("Click to Open Chat ");
  const [inputValue, setInputValue] = useState<string>('');
  const [email,setEmail]=useState(" Users Email appeares here");
+<<<<<<< HEAD
  const handleData =   (username:string, useremail:string)=>{
   setName(username);
  setEmail(useremail);
  fetchChats();
   // console.log(name+ " "+email)
+=======
+ 
+ function handleSubmit(e:{preventDefault:()=>void}){
+   e.preventDefault();
+   socket.emit("private message",{to:email,message,from:user})
+   console.log(message)
+   setMessage("")
+ }
+  if(user){
+    const email = user.email
+    socket.auth={email}
+    socket.connect()
+  }
+  io.on("connection", (socket:Socket) => {
+    const users = [];
+    for (let [id, socket] of io.of("/").sockets) {
+      users.push({
+        userID: id,
+        email: socket.email,
+      });
+    }
+    socket.emit("users", users);
+    // ...
+  });
+  const handleData =   (username:string, useremail:string)=>{
+    setName(username);
+    setEmail(useremail);
+    // console.log(name+ " "+email)
+>>>>>>> 0e5f718 (Added Google OAuth now users can login both by Google and Credentials)
  }
  const fetchChats =async()=>{
   if(session)
@@ -164,9 +207,15 @@ export default function Chat() {
               </div>
         </div>
          */}
-                
+                    {inbox.map((message:string,index:number)=>(
+                <div key={index}>{message}</div>
+            ))}
                     <div className="w-11/12 right-8 bottom-4 flex fixed  h-12 flex-wrap flex-wrap-reverse items-center  justify-start">
                       <Textarea
+                        type="text"
+                        placeholder="Enter your message here..."
+                        value={message}
+                        onChange={(e)=>{setMessage(e.target.value)}}
                         className="chat-box w-11/12 flex  items-center"
                         minRows={1}
                         maxRows={5}
@@ -178,6 +227,8 @@ export default function Chat() {
                         <Button
                           className="send h-9 ml-2 z-11 "
                           isIconOnly
+                          type="submit"
+                          onClick={handleSubmit}
                           color="success"
                           aria-label="Like"
                           onClick={()=>{Send()}}
