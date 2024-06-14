@@ -4,7 +4,7 @@ import React,{useState} from "react";
 import {Navbar, NavbarBrand, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, NavbarContent, NavbarItem, Link, Button,Input,Checkbox,RangeCalendar,Dropdown,DropdownItem,DropdownMenu,DropdownTrigger} from "@nextui-org/react";
 // import {AcmeLogo} from "./AcmeLogo.jsx";
 // import { Avatar } from "@mui/material";
-import Avatar2 from "@mui/material";
+import {Avatar as Avatar2} from "@mui/material";
 import { Avatar } from "@nextui-org/react";
 import { categories } from "../categories";
 // import { SearchIcon } from "@/pages/SearchIcon";
