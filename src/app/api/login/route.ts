@@ -7,12 +7,12 @@ export async function POST(req:NextRequest){
     const decryptPassword = (password:string) => {
         const bytes = CryptoTS.AES.decrypt(password,"BITS00461444#$")
         let decryptedPass = bytes.toString(CryptoTS.enc.Utf8)
-        console.log(decryptedPass)
+        // console.log(decryptedPass)
         return decryptedPass
     }
     const client = await clientPromise;
     const body = await req.json()
-    console.log(body)
+    // console.log(body)
         const db = client.db("BITSBids");
             let user = await db
             .collection("users")

@@ -43,14 +43,14 @@ function Uploadproduct() {
       const category = categories[categor-1].value
       const image = images
       const body = {image,name,price,description,category};
-      console.log(body)
+      // console.log(body)
       const res = await fetch("http://localhost:3000/api/uploadproduct", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       });
       let response = await res.json()
-      console.log(response)
+      // console.log(response)
       if(response.success){
         alert("Product Uploaded Sucessfully")
       }else{
@@ -143,7 +143,7 @@ const imgList = (
         </ul>
     </>
 )
-console.log(images)
+// console.log(images)
   const HandleProgress = (p:number) =>{
     
   }
@@ -264,7 +264,7 @@ console.log(images)
                         setImages(res)
                         const json = JSON.stringify(res)
                         // Do something with the response
-                        console.log(json);
+                        // console.log(json);
                     }
                     //alert("Upload Completed");
                 }}
@@ -420,7 +420,7 @@ console.log(images)
                         setImages(res)
                         const json = JSON.stringify(res)
                         // Do something with the response
-                        console.log(json);
+                        // console.log(json);
                     }
                     //alert("Upload Completed");
                 }}

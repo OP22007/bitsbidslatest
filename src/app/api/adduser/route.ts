@@ -33,7 +33,7 @@ export async function POST(req:NextRequest){
         let user = await db
         .collection("users")
         .findOne({ email: email });
-        console.log(user);
+        // console.log(user);
         if (!user) {
             let u = await db.collection("users").insertOne({
                 userId: nanoid(),
@@ -43,7 +43,7 @@ export async function POST(req:NextRequest){
                 email: userInput.email,
             password: userInput.password,
           });
-          console.log(u);
+          // console.log(u);
           return new Response (JSON.stringify({ success: "Success" }))
         } else {
           return new Response (JSON.stringify({ error: "User already exists" }))

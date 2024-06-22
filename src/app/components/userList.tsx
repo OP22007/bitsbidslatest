@@ -21,9 +21,9 @@ export default function App({sendUserProfile}){
       }
     
   
-      const OpenChat = async(name:string, email:string)=>{
+      const OpenChat = async(userID:string,name:string, email:string)=>{
         
-                await  sendUserProfile(name, email);
+                await  sendUserProfile(userID,name, email);
       }
      
 const [users,setUsers]= useState<Array<User>>([]);
@@ -55,17 +55,18 @@ const getUsers =async ()=>{
     {
         users.map((element)=>(
            
-            <div className="mb-4  p-2 rounded-xl" onClick={()=>{OpenChat(element.name, element.email)}}>
+            <div key={element.userID} className="mb-4  p-2 rounded-xl" onClick={()=>{OpenChat(element.userID,element.name, element.email)}}>
             
               
                 <User   
+            id={element.userID}
              name={element.name}
              description={element.email}
             
              avatarProps={{
              color:"primary"
              }}
-           onClick={()=>{OpenChat(element.name, element.email)}}></User>
+           onClick={()=>{OpenChat(element.userID,element.name, element.email)}}></User>
                
            </div>
         ))

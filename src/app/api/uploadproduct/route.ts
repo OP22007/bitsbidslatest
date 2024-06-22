@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth";
 import { options } from "../auth/[...nextauth]/options";
 export async function POST(req:NextRequest){
     const session = await getServerSession(options)
-    console.log(session)
+    // console.log(session)
     const productID = nanoid()
     const { image,name,price, description,category } = await req.json();
     if (!image||!name||!description||!category||!price) {
@@ -38,7 +38,7 @@ export async function POST(req:NextRequest){
                 description: productInput.description,
                 category: productInput.category,
           });
-          console.log(p);
+        //   console.log(p);
           return new NextResponse(JSON.stringify({ success: "Success" }))
     }
     }

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
@@ -8,11 +8,8 @@ import {
   MoveDirection,
   OutMode,
 } from "@tsparticles/engine";
-// import { loadAll } from "@tsparticles/all"; // if you are going to use `loadAll`, install the "@tsparticles/all" package too.
-// import { loadFull } from "tsparticles"; // if you are going to use `loadFull`, install the "tsparticles" package too.
-import { loadSlim } from "@tsparticles/slim"; // if you are going to use `loadSlim`, install the "@tsparticles/slim" package too.
-import { Button, Image, Input, Textarea, Link, Card } from "@nextui-org/react";
-// import { loadBasic } from "@tsparticles/basic"; // if you are going to use `loadBasic`, install the "@tsparticles/basic" package too.
+import { loadSlim } from "@tsparticles/slim"; // optimized package for tsparticles
+import { Button, Input, Link, Card } from "@nextui-org/react";
 
 const App = () => {
   const [init, setInit] = useState<boolean>(false);
@@ -21,63 +18,52 @@ const App = () => {
   const [phone, setPhone] = useState<number>(0);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const onSubmitForm = async(e:InputEvent) => {
+
+  const onSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
-      const body = {name,age,phone,email,password};
-      console.log(body)
-      const res = await fetch("http://localhost:3000/api/adduser", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-      });
-      let response = await res.json()
-      console.log(response)
-      if(response.success){
-        alert("User signup successful please login to continue")
-      }else{
-        alert("Something is wrong")
-      }
-      setName('')
-      setAge(0)
-      setPhone(0)
-      setEmail('')
-      setPassword('')
+    const body = { name, age, phone, email, password };
+    const res = await fetch("http://localhost:3000/api/adduser", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const response = await res.json();
+    if (response.success) {
+      alert("User signup successful please login to continue");
+    } else {
+      alert("Something went wrong");
+    }
+    setName("");
+    setAge(0);
+    setPhone(0);
+    setEmail("");
+    setPassword("");
   };
-  const validateEmail = (email:string) => email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
+
+  const validateEmail = (email: string) =>
+    /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
 
   const isInvalidEmail = useMemo(() => {
     if (email === "") return false;
-
-    return validateEmail(email) ? false : true;
+    return !validateEmail(email);
   }, [email]);
-  
-  const validatePhone = (phone:number) => {return (phone.toString().length==10)}
+
+  const validatePhone = (phone: number) => phone.toString().length === 10;
 
   const isInvalidPhone = useMemo(() => {
     if (phone === 0) return false;
-
-    return validatePhone(phone) ? false : true;
+    return !validatePhone(phone);
   }, [phone]);
 
-
-  // this should be run only once per application lifetime
   useEffect(() => {
     initParticlesEngine(async (engine) => {
-      // you can initiate the tsParticles instance (engine) here, adding custom shapes or presets
-      // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-      // starting from v2 you can add only the features you need reducing the bundle size
-      //await loadAll(engine);
-      //await loadFull(engine);
       await loadSlim(engine);
-      //await loadBasic(engine);
     }).then(() => {
       setInit(true);
     });
   }, []);
 
-  const particlesLoaded = async (container?: Container): Promise<void> => {
-    // console.log(container);
-  };
+  const particlesLoaded = async (container?: Container): Promise<void> => {};
 
   const options: ISourceOptions = useMemo(
     () => ({
@@ -153,93 +139,71 @@ const App = () => {
   if (init) {
     return (
       <div>
-        <div
-          aria-hidden="true"
-          className="fixed hidden dark:md:block dark:opacity-70 -top-[80%] -right-[60%] 2xl:-top-[60%] 2xl:-right-[45%] z-10 rotate-12"
-        >
-          <img
-            src="https://nextui.org/gradients/docs-right.png"
-            className="relative z-10 opacity-100 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large"
-            alt="docs right background"
-            data-loaded="true"
-          />
-        </div>
-        <div
-          aria-hidden="true"
-          className="fixed hidden dark:md:block dark:opacity-100 -bottom-[40%] -left-[15%] z-10"
-        >
-          <img
-            src="https://nextui.org/gradients/docs-left.png"
-            className="relative z-10 opacity-100 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large"
-            alt="docs left background"
-            data-loaded="true"
-          />
-          </div>
-          <div
-            aria-hidden="true"
-            className="fixed md:hidden block dark:opacity-100 -bottom-[30%] -right-[95%] z-10 rotate-12"
-          >
-            <img
-              src="https://nextui.org/gradients/docs-right.png"
-              className="relative z-10 opacity-100 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large"
-              alt="docs right background"
-              data-loaded="true"
-            />
-          </div>
-          <div
-            aria-hidden="true"
-            className="fixed md:hidden block dark:opacity-100 -top-[25%] -right-[95%] z-10 rotate-12"
-          >
-            <img
-              src="https://nextui.org/gradients/docs-right.png"
-              className="relative z-10 opacity-100 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large"
-              alt="docs right background"
-              data-loaded="true"
-            />
-          </div>
-          <div
-            aria-hidden="true"
-            className="fixed md:hidden block dark:opacity-100 -top-[10%] -left-[80%] z-10"
-          >
-            <img
-              src="https://mundum.com/images/Gradient-2-min.png"
-              className="relative z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large"
-              alt="docs left background"
-              data-loaded="true"
-            />
-          </div>
-          <div
-            aria-hidden="true"
-            className="fixed md:hidden block dark:opacity-100 -bottom-[20%] -left-[70%] z-10"
-          >
-            <img
-              src="https://mundum.com/images/Gradient-2-min.png"
-              className="relative z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large"
-              alt="docs left background"
-              data-loaded="true"
-            />
-          </div>
         <Particles
           id="tsparticles"
           particlesLoaded={particlesLoaded}
           options={options}
         />
+        
         <div
           className="flex flex-col justify-center mt-10 xl:mt-0"
           style={{ alignItems: "center" }}
         >
+          
+          <div
+        aria-hidden="true"
+        className="fixed hidden dark:md:block dark:opacity-70 -top-[80%] -right-[60%] 2xl:-top-[60%] 2xl:-right-[45%] z-0 rotate-12"
+      >
+        <img
+          src="https://nextui.org/gradients/docs-right.png"
+          className="relative z-10 opacity-100 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large"
+          alt="docs right background"
+          data-loaded="true"
+        />
+      </div>
+      <div
+        aria-hidden="true"
+        className="fixed md:hidden block dark:opacity-100 -bottom-[30%] -right-[95%] z-0 rotate-12"
+      >
+        <img
+          src="https://nextui.org/gradients/docs-right.png"
+          className="relative z-10 opacity-100 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large"
+          alt="docs right background"
+          data-loaded="true"
+        />
+      </div>
+      <div
+        aria-hidden="true"
+        className="fixed hidden dark:md:block dark:opacity-80 -top-[30%] -left-[60%] z-0"
+      >
+        <img
+          src="https://mundum.com/images/Gradient-2-min.png"
+          className="relative z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large"
+          alt="docs left background"
+          data-loaded="true"
+        />
+      </div>
+      <div
+        aria-hidden="true"
+        className="fixed md:hidden block dark:opacity-100 -bottom-[20%] -left-[70%] z-0"
+      >
+        <img
+          src="https://mundum.com/images/Gradient-2-min.png"
+          className="relative z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large"
+          alt="docs left background"
+          data-loaded="true"
+        />
+      </div>
           <Card
-            className="p-4 mb-20 xl:p-4 mt-10 w-3/10 z-20 "
+            className="p-4 mb-20 xl:p-4 mt-10 w-3/10 z-20"
             style={{ alignItems: "center" }}
           >
-            {/* <Image src={logo} width={300}/> */}
             <p className="text-2xl font-bold mt-10 xl:text-3xl">
               Welcome to BITSBids
             </p>
-            <p className="text-xl  font-bold mt-2 xl:text-xl">
+            <p className="text-xl font-bold mt-2 xl:text-xl">
               Your own bidding platform
             </p>
-            {/* <div className="framer-ku27eb backdrop-blur-3" style={{backgroundColor:'rgba(255, 255, 255, 0.03)',opacity:1,borderRadius:'16px',boxShadow:'rgba(255, 255, 255, 0.2)',inset:'0px 0px 4px 0px'}}></div> */}
             <form onSubmit={onSubmitForm}>
               <Input
                 className="mt-10 xl:w-full"
@@ -254,8 +218,8 @@ const App = () => {
               />
               <Input
                 className="mt-5 xl:w-full"
-                value={Number(age)}
-                onChange={(e) => setAge(e.target.value)}
+                value={age}
+                onChange={(e) => setAge(Number(e.target.value))}
                 type="number"
                 label="Age"
                 placeholder="Enter your Age"
@@ -265,8 +229,8 @@ const App = () => {
               />
               <Input
                 className="mt-5 xl:w-full"
-                value={Number(phone)}
-                onChange={(e) => setPhone(e.target.value)}
+                value={phone}
+                onChange={(e) => setPhone(Number(e.target.value))}
                 type="number"
                 label="Mobile Number"
                 placeholder="Enter your mobile number"
@@ -306,7 +270,6 @@ const App = () => {
                 color="success"
                 style={{
                   color: "white",
-                  // width: "400px",
                   borderRadius: "20px",
                 }}
               >
@@ -316,7 +279,7 @@ const App = () => {
             <p className="mt-5 mb-5">
               Already have an account?{" "}
               <Link href="/login">
-                <u className="text-green-500"> LOGIN HERE</u>
+                <u className="text-green-500">LOGIN HERE</u>
               </Link>
             </p>
           </Card>
@@ -325,4 +288,5 @@ const App = () => {
     );
   }
 };
+
 export default App;
