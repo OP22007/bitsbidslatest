@@ -3,12 +3,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Magnify } from "magnify-zone";
-import Image from "next/image";
 import {
   Button,
   Breadcrumbs,
   BreadcrumbItem,
   Skeleton,
+  Image
 } from "@nextui-org/react";
 import image from "../../../public/car.jpg";
 
@@ -34,11 +34,12 @@ const Bid = () => {
       }}
     >
       <div aria-hidden="false" className="fixed block opacity-60  z-0 ">
-        <img
+        <Image
           src="https://mundum.com/images/bg-partners.png"
           className="w-full"
           alt="docs right background"
           data-loaded="true"
+          loading="eager"
           // style={{ height:''}}
         />
       </div>

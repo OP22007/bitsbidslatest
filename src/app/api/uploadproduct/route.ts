@@ -37,6 +37,7 @@ export async function POST(req:NextRequest){
                 price:productInput.price,
                 description: productInput.description,
                 category: productInput.category,
+                createdAt:new Date()
           });
         //   console.log(p);
           return new NextResponse(JSON.stringify({ success: "Success" }))

@@ -8,6 +8,7 @@ type ProductDocument = Document & {
   price:number;
   description:string;
   category:string;
+  createdAt:Date;
 };
 
 type ProductInput = {
@@ -18,6 +19,7 @@ type ProductInput = {
   price:ProductDocument['price']
   description: ProductDocument['description']
   category: ProductDocument['category']
+  createdAt:ProductDocument['createdAt']
 };
 
 const productsSchema = new Schema(
@@ -51,6 +53,11 @@ const productsSchema = new Schema(
       type: Schema.Types.String,
       required: true,
     },
+    createdAt:{
+      type:Schema.Types.Date,
+      required:true,
+      default:new Date()
+    }
   },
   {
     collection: 'products',

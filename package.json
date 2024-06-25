@@ -33,6 +33,7 @@
     "react-auto-scroll-container": "^0.1.4",
     "react-dom": "^18",
     "react-scroll-to-bottom": "^4.2.0",
+    "smooth-scrollbar": "^8.8.4",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
     "types": "^0.1.1",
