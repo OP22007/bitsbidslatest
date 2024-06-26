@@ -41,7 +41,7 @@ export default function Chat() {
     setReceiverID(userID);
     setName(username);
     setEmail(useremail);
-    
+    fetchChats()
     CreateroomCode();
   }
     socket.on("refresh", () => {
@@ -60,14 +60,18 @@ export default function Chat() {
     useEffect(() => {
       if (session) {
         fetchChats();
+        CreateroomCode();
+      
       }
     }, [session,email]);
 
     const fetchChats = async () => {
       if (session && email) {
+       await  CreateroomCode()
+       const ChatID =roomCode
         try {
           const response = await fetch(
-            `http://localhost:3000/api/getchats?senderID=${user?.email}&receiverID=${email}`,
+            `http://localhost:3000/api/getchats?ChatID=${encodeURIComponent(ChatID)}`,
             {
               method: "GET",
             }
@@ -75,6 +79,7 @@ export default function Chat() {
           if (response.ok) {
             const data = await response.json();
             setChats(data.messages || []);
+           // console.log(data.messages)
           }
         } catch (error) {
           console.error("Failed to fetch chats:", error);
@@ -87,9 +92,10 @@ export default function Chat() {
         alert("Cannot send an empty text");
         return;
       }
-
+     await CreateroomCode();
       const senderEmail = user?.email || "";
       const myChat = {
+        ChatID:roomCode,
         senderID: senderEmail,
         receiverID: email,
         message: inputValue,
@@ -99,7 +105,7 @@ export default function Chat() {
 //Db saving Mech
       try {
         const res = await fetch("http://localhost:3000/api/addchats", {
-          method: "PUT",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(myChat),
         });
@@ -187,7 +193,7 @@ export default function Chat() {
                           key={index}
                           className="bg-gray-800 p-2 rounded my-1"
                         >
-                          {chat.message}
+                          {chat.content}
                         </div>
                       ))}
                   </div>

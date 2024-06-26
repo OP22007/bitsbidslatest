@@ -4,7 +4,7 @@ const nextConfig = {
         serverActions:true
     },
 
-        reactStrictMode: true,
+        reactStrictMode: false,
      
     
     images:{
