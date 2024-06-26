@@ -6,6 +6,10 @@ const nextConfig = {
 
         reactStrictMode: true,
      
+    
+    images:{
+        domains:['nextui.org','mundum.com','utfs.io']
+    }
 };
 
 export default nextConfig;

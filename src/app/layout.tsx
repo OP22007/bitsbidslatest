@@ -7,6 +7,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 
 import { ourFileRouter } from "./api/uploadthing/core";
+import Scroll from "./components/SmoothScroll";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

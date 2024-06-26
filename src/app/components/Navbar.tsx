@@ -99,7 +99,7 @@ export default function App() {
         </NavbarItem>
       </NavbarContent>
 
-      {!user && (
+      {session.status==='unauthenticated' && (
         <NavbarContent justify="end">
           <NavbarItem>
             <Button variant="flat" color="success">
@@ -113,8 +113,13 @@ export default function App() {
           </NavbarItem>
         </NavbarContent>
       )}
+      {session.status==='loading' && (
+        <NavbarContent justify="end">
+          
+        </NavbarContent>
+      )}
 
-      {user && (
+      {session.status==='authenticated' && (
         <NavbarContent as="div" justify="end">
           <Dropdown placement="bottom-end">
             <DropdownTrigger>

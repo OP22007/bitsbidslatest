@@ -11,7 +11,7 @@ import ScrollToBottom from "react-scroll-to-bottom";
 import AutoScrollContainer from "react-auto-scroll-container";
 
 export default function Chat() {
-  const { data: session } = useSession();
+  const {data: session} = useSession();
   const [chats, setChats] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
   const [name, setName] = useState<string>("Click to Open Chat");
