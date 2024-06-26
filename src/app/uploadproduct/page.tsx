@@ -42,7 +42,8 @@ function Uploadproduct() {
     e.preventDefault();
       const category = categories[categor-1].value
       const image = images
-      const body = {image,name,price,description,category};
+      const initialPrice=price
+      const body = {image,name,initialPrice,price,description,category};
       // console.log(body)
       const res = await fetch("http://localhost:3000/api/uploadproduct", {
         method: "POST",

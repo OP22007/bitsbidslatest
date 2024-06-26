@@ -2,7 +2,6 @@ var CryptoTS = require("crypto-ts");
 import { AES } from "crypto-ts";
 import { NextRequest,NextResponse } from "next/server";
 import clientPromise from "../../lib/mongodb";
-var jwt = require('jsonwebtoken')
 export async function POST(req:NextRequest){
     const decryptPassword = (password:string) => {
         const bytes = CryptoTS.AES.decrypt(password,"BITS00461444#$")

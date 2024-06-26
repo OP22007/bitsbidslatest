@@ -1,14 +1,41 @@
 import mongoose, { Schema, Model, Document } from 'mongoose';
+type Bids = {
+  bidID:string;
+  bidderID:string;
+  price:number;
+  time:Date;
+}
+const bidsSchema = new Schema({
+  bidID:{
+    type:Schema.Types.String,
+    required:true,
+  },
+  bidderID:{
+    type:Schema.Types.String,
+    required:true
+  },
+  price:{
+    type:Schema.Types.Number,
+    required:true
+  },
+  time:{
+    type:Schema.Types.String,
+    default:new Date(),
+    required:true
+  }
+})
 
 type ProductDocument = Document & {
   userID:string;
   productID:string;
   image:Array<Object>;
   name: string;
+  initialPrice:number;
   price:number;
   description:string;
   category:string;
   createdAt:Date;
+  bids:Bids[];
 };
 
 type ProductInput = {
@@ -16,11 +43,14 @@ type ProductInput = {
   productID : ProductDocument['productID'];
   image : ProductDocument['image'];
   name: ProductDocument['name'];
+  initialPrice:ProductDocument['initialPrice']
   price:ProductDocument['price']
   description: ProductDocument['description']
   category: ProductDocument['category']
   createdAt:ProductDocument['createdAt']
+  bids:ProductDocument['bids']
 };
+
 
 const productsSchema = new Schema(
   {
@@ -41,8 +71,12 @@ const productsSchema = new Schema(
       type: Schema.Types.String,
       required: true,
     },
+    initialPrice:{
+      type:Schema.Types.Number,
+      required:true
+    },
     price:{
-      type:Schema.Types.String,
+      type:Schema.Types.Number,
       required:true
     },
     description: {
@@ -57,7 +91,8 @@ const productsSchema = new Schema(
       type:Schema.Types.Date,
       required:true,
       default:new Date()
-    }
+    },
+    bids:[bidsSchema],
   },
   {
     collection: 'products',
@@ -68,3 +103,4 @@ const productsSchema = new Schema(
 const Product: Model<ProductDocument> = mongoose.model<ProductDocument>('Product', productsSchema);
   
 export { Product, ProductInput, ProductDocument };
+  
