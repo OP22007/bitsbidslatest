@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { User } from "@nextui-org/react";
+import { Badge, User } from "@nextui-org/react";
 import { Textarea } from "@nextui-org/input";
 import { Image } from "@nextui-org/image";
 import UserList from "../components/userList";
@@ -84,10 +84,12 @@ export default function Chat() {
     setEmail(useremail);
     fetchChats()
     CreateroomCode();
-  }
+  } 
+  if(socket)
     socket.on("refresh", () => {
       fetchChats();
     });
+    if(socket)
     socket.on("Message",(room)=>{
       // setloader(!loader)
            fetchChats();
@@ -142,7 +144,8 @@ export default function Chat() {
         message: inputValue,
       };
      CreateroomCode();
-      socket.emit("private message", email, inputValue, senderEmail,roomCode);
+     if(socket) 
+     socket.emit("private message", email, inputValue, senderEmail,roomCode);
 //Db saving Mech
       try {
         const res = await fetch("http://localhost:3000/api/addchats", {
@@ -152,6 +155,7 @@ export default function Chat() {
         });
         if (res.ok) {
           setInputValue("");
+          if(socket)
           socket.emit("Refresh",roomCode)
        
         }
@@ -223,7 +227,8 @@ export default function Chat() {
           <div className="flex flex-col w-full lg:w-8/12 h-screen xl:flex items-center ml-4">
             <div className="flex flex-col w-full h-5/6 overflow-y-scroll bg-black/30 backdrop-blur-3xl mb-10 p-2 mt-2 rounded-xl">
               <div className="flex w-full bg-transparent border-b-1 border-gray-800 rounded-sm p-2">
-                {/* <User
+
+                 <User
                     name={name}
                     description={email}
                     avatarProps={{ color: "primary" }}
