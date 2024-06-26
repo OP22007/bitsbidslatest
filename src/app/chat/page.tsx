@@ -42,8 +42,12 @@ export default function Chat() {
     setName(username);
     setEmail(useremail);
     
-    CreateroomCode();
+    // CreateroomCode();
   }
+    useEffect(()=>{
+      CreateroomCode()
+    },[email])
+    console.log(email)
     socket.on("refresh", () => {
       fetchChats();
     });
@@ -52,11 +56,7 @@ export default function Chat() {
            fetchChats();
            
     })
-     
-
-    
-   
-    
+         
     useEffect(() => {
       if (session) {
         fetchChats();

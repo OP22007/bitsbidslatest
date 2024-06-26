@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Magnify } from "magnify-zone";
 import {
@@ -10,18 +10,92 @@ import {
   Skeleton,
   Image
 } from "@nextui-org/react";
-import image from "../../../public/car.jpg";
+import { io } from "socket.io-client";
+
+interface Product {
+  userID: string;
+  productID: string;
+  image: { url: string }[];
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+}
 
 const Bid = () => {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [price, setPrice] = useState<number | null>(null);
   const searchParams = useSearchParams();
-  const slug = searchParams.get("id");
-  // console.log(slug)
-  const [isLoaded, setIsLoaded] = React.useState(false);
+  const productID = searchParams.get("id");
+  const [socket, setSocket] = useState<any>(null);
+
+  useEffect(() => {
+    const socketInstance = io("http://localhost:3002");
+    setSocket(socketInstance);
+
+    const joinRoom = () => {
+      socketInstance.emit("joinRoom", productID);
+    };
+
+    const handleNewBid = (productID: string) => {
+      if (price !== null) {
+        setPrice((prevPrice) => (prevPrice !== null ? prevPrice + 50 : null));
+      }
+    };
+
+    socketInstance.on("connect", joinRoom);
+    socketInstance.on("new_bid", handleNewBid);
+
+    return () => {
+      socketInstance.off("connect", joinRoom);
+      socketInstance.off("new_bid", handleNewBid);
+      socketInstance.disconnect();
+    };
+  }, [price,productID]);
+
+  const getProduct = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/getbids?productID=${productID}`);
+      if (response.ok) {
+        const data = await response.json();
+        setProduct(data.productbyID);
+        setPrice(data.productbyID.price);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    getProduct();
+  }, [productID]);
+
+  const onSubmitForm = async () => {
+    if (price === null || !socket) return;
+
+    const body = { productID, price };
+    const res = await fetch("http://localhost:3000/api/bidnow", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    let response = await res.json();
+    if (response.success) {
+      // alert("Bid Successful");
+      socket.emit("new_bid", productID);
+    } else {
+      alert("Something is wrong");
+    }
+  };
+
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const toggleLoad = () => {
     setIsLoaded(true);
   };
-  const myTimeout = setTimeout(toggleLoad, 500);
+
+  setTimeout(toggleLoad, 500);
+
   return (
     <div
       className="flex justify-center bg-opacity-30"
@@ -33,40 +107,16 @@ const Bid = () => {
         backgroundClip: "padding-box",
       }}
     >
-      <div aria-hidden="false" className="fixed block opacity-60  z-0 ">
+      <div aria-hidden="false" className="fixed block opacity-60 z-0 ">
         <Image
           src="https://mundum.com/images/bg-partners.png"
           className="w-full"
           alt="docs right background"
           data-loaded="true"
           loading="eager"
-          // style={{ height:''}}
         />
       </div>
-      {/* <div
-          aria-hidden="false"
-          className="fixed block opacity-100 -top-[80%] -right-[60%] 2xl:-top-[35%] 2xl:-right-[15%] z-0 "
-        >
-          <img
-            src='https://www.forbusiness.viber.com/images/viconnect/right2.png'
-            className="relative z-10 opacity-100 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large"
-            alt="docs right background"
-            data-loaded="true"
-            style={{width:'1000px', height:'1000px'}}
-          />
-        </div>
-        <div
-          aria-hidden="true"
-          className="fixed  dark:md:block dark:opacity-100 -bottom-[10%] -top-[30%] -left-[80%] z-0 rotate-12"
-        >
-          <img
-            src="https://mundum.com/images/Gradient-2-min.png"
-            className="relative z-10 opacity-0 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large"
-            alt="docs left background"
-            data-loaded="true"
-          />
-        </div> */}
-      <div className="mb-5 z-20 " style={{}}>
+      <div className="mb-5 z-20">
         <div
           className="item flex mt-10 p-6 z-10"
           style={{
@@ -86,24 +136,24 @@ const Bid = () => {
               background: "url(../../../public/grad2.png)",
             }}
           >
-            <Magnify
-              className="flex z-16"
-              imageUrl="https://m.media-amazon.com/images/I/71uQ8VB99rL._SL1291_.jpg"
-              zoomFactor={3}
-              zoomPosition="right"
-              zoomWidth={600}
-              zoomHeight={600}
-              marginSize="20px"
-              mainImageWidth="250px"
-
-              // style={{background:'linear-gradient(180deg, rgba(224, 34, 153, 1) 0%, rgba(88, 0, 55, 1) 100%)'}}
-            />
+            {product && (
+              <Magnify
+                className="flex z-16"
+                imageUrl={product.image[0].url}
+                zoomFactor={3}
+                zoomPosition="right"
+                zoomWidth={600}
+                zoomHeight={600}
+                marginSize="20px"
+                mainImageWidth="250px"
+              />
+            )}
           </div>
           <div className="itemct">
             <div className="category">
               <Breadcrumbs size="lg">
                 <BreadcrumbItem>Category</BreadcrumbItem>
-                <BreadcrumbItem>Books</BreadcrumbItem>
+                <BreadcrumbItem>{product?.category}</BreadcrumbItem>
               </Breadcrumbs>
             </div>
             <div className="title mt-5">
@@ -115,21 +165,11 @@ const Bid = () => {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                Machine Learning using Python
+                {product?.name}
               </p>
             </div>
             <div className="description mt-5">
-              <p>
-                Full Color EditionThrough a series of recent breakthroughs, deep
-                learning has boosted the entire field of machine learning. Now,
-                even programmers who know close to nothing about this technology
-                can use simple, efficient tools to implement programs capable of
-                learning from data. This practical book shows you how. By using
-                concrete examples, minimal theory, and two production-ready
-                Python frameworks—Scikit-Learn and TensorFlow—author Aurélien
-                Géron helps you gain an intuitive understanding of the concepts
-                and tools for building intelligent systems.
-              </p>
+              <p>{product?.description}</p>
             </div>
             <div
               className="price font-extrabold text-4xl mt-5 w-fit p-2"
@@ -138,19 +178,19 @@ const Bid = () => {
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 border: "solid 3px #272829",
-                // borderWidth:'thin',
                 borderRadius: "15px",
               }}
             >
-              Rs.200
+              Rs.{price}
             </div>
             <div className="btn mt-5">
               <Button
                 variant="shadow"
+                type="submit"
+                onClick={onSubmitForm}
                 className="w-32 text-lg font-semibold text-rose-400"
                 style={{
-                  background:
-                    "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
+                  background: "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
                 }}
               >
                 Bid Now
@@ -162,4 +202,5 @@ const Bid = () => {
     </div>
   );
 };
+
 export default Bid;
