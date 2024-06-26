@@ -102,7 +102,7 @@ const getUsers =async ()=>{
                </Badge>
                 }
                 {!onlineUsers?.some((user:any)=>user?.userID===element.email)&&
-               <Badge content='5' size="sm" color="danger" className="text-transparent">
+               <Badge content='5' size="sm" className="text-transparent">
                <MuiAvatar
                   isBordered
                   // as="button"

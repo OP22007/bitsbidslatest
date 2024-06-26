@@ -78,19 +78,26 @@ export default function Chat() {
     if (socket == null) return;
     socket.emit("joinRoom", roomName);
   };
+  useEffect(() => {
+    if (session) {
+      fetchChats();
+      CreateroomCode();
+    
+    }
+  }, [session,email]);
   const handleData = (userID: string, username: string, useremail: string) => {
     setReceiverID(userID);
     setName(username);
     setEmail(useremail);
     fetchChats()
     CreateroomCode();
-  } 
-  if(socket)
+  }
+    if(socket==null)return;
     socket.on("refresh", () => {
       fetchChats();
     });
-    if(socket)
-    socket.on("Message",(room)=>{
+    if(socket==null)return;
+    socket!.on("Message",(room)=>{
       // setloader(!loader)
            fetchChats();
            
@@ -100,13 +107,6 @@ export default function Chat() {
     
    
     
-    useEffect(() => {
-      if (session) {
-        fetchChats();
-        CreateroomCode();
-      
-      }
-    }, [session,email]);
 
     const fetchChats = async () => {
       if (session && email) {
@@ -227,8 +227,7 @@ export default function Chat() {
           <div className="flex flex-col w-full lg:w-8/12 h-screen xl:flex items-center ml-4">
             <div className="flex flex-col w-full h-5/6 overflow-y-scroll bg-black/30 backdrop-blur-3xl mb-10 p-2 mt-2 rounded-xl">
               <div className="flex w-full bg-transparent border-b-1 border-gray-800 rounded-sm p-2">
-
-                 <User
+                <User
                     name={name}
                     description={email}
                     avatarProps={{ color: "primary" }}
