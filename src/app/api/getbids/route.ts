@@ -6,6 +6,7 @@ export async function GET(req: NextRequest) {
         const client = await clientPromise;
         const db = client.db("BITSBids");
         const productID = req.nextUrl.searchParams.get('productID');
+        const userEmail = req.nextUrl.searchParams.get('userEmail');
         const productName = req.nextUrl.searchParams.get('productName');
         const sellerName = req.nextUrl.searchParams.get('sellerName');
         const categories = req.nextUrl.searchParams.getAll('category')
@@ -37,7 +38,11 @@ export async function GET(req: NextRequest) {
         // Fetch products based on combined query
         const productsBySandPName = await db.collection('products').find(productQuery).toArray();
         const productbyID = await db.collection('products').findOne({productID:productID})
-        return new NextResponse(JSON.stringify({ products,productsBySandPName,productbyID }), {
+        let userID = await db.collection('users').findOne({email:userEmail})
+        if(userID)
+        userID = userID.userId;
+        const productbyUserID = await db.collection('products').find({userID:userID}).toArray()
+        return new NextResponse(JSON.stringify({ products,productsBySandPName,productbyID,productbyUserID }), {
             status: 200,
             headers: {
                 'Content-Type': 'application/json'
