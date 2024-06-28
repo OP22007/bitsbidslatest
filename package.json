@@ -24,6 +24,7 @@
     "@types/react-scroll-to-bottom": "^4.2.5",
     "@uploadthing/react": "^6.6.0",
     "chart.js": "^4.4.3",
+    "chartjs-plugin-zoom": "^2.0.1",
     "crypto-ts": "^1.0.2",
     "emoji-picker-react": "^4.9.4",
     "framer-motion": "^11.2.10",

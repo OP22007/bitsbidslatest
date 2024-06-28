@@ -24,6 +24,7 @@ export async function PUT(req:NextRequest){
     const bidderID = user.userId
     const bidID = nanoid()
     const time = new Date()
+    console.log(time.getDate())
     const bid = {
         bidID,
         bidderID,
@@ -33,7 +34,7 @@ export async function PUT(req:NextRequest){
     bids.push(bid);
     const db = client.db("BITSBids");
     console.log(price)
-    console.log(bids)
+    // console.log(bids)
     await Promise.all([
         db.collection("products").updateOne(
             { productID: productID },

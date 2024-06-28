@@ -9,6 +9,8 @@ import { today, getLocalTimeZone } from "@internationalized/date";
 import { categories } from "../categories";
 import { SearchIcon } from "../SearchIcon";
 import Sidebar from "../components/Sidebar";
+import {motion} from 'framer-motion'
+import { slideInFromLeft, slideInFromTop } from "../utils/motion";
 
 interface Category {
   key: number;
@@ -90,7 +92,7 @@ function Bids() {
       <div aria-hidden="true" className="fixed hidden dark:md:block dark:opacity-100 -bottom-[40%] -left-[15%] z-0">
         <img src="https://nextui.org/gradients/docs-left.png" className="relative z-0 opacity-100 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large" alt="docs left background" data-loaded="true" />
       </div>
-      {/* <div className="left-menu xl:ml-16 overflow-y-auto h-screen fixed top-0 left-0 p-4"> */}
+      <motion.div initial="hidden" animate="visible" variants={slideInFromLeft(0.5)} className="">
         <Sidebar
           searchpn={searchpn}
           setSearchpn={setSearchpn}
@@ -101,12 +103,15 @@ function Bids() {
           selectedCategories={selectedCategories}
           handleCategoryChange={handleCategoryChange}
         />
-      {/* </div> */}
+      </motion.div>
       <div className="flex-1 z-10">
         <div className="flex flex-wrap " style={{marginLeft:'400px'}}>
           {bids.map((bid: Bid) => (
-            <div
+            <motion.div
               key={bid.productID}
+              initial="hidden"
+              animate="visible"
+              variants={slideInFromTop}
               className="flex flex-col baseinfo h-fit mx-4 my-2 p-5"
               style={{
                 border: "solid #272829",
@@ -159,7 +164,7 @@ function Bids() {
                   </Link>
                 </Button>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
