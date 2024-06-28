@@ -145,7 +145,7 @@ export default function App() {
               </DropdownItem>
               <DropdownItem key="profile" color="warning">My Profile</DropdownItem>
               <DropdownItem key="update_profile" color="warning">Update Profile</DropdownItem>
-              <DropdownItem key="bids" color="warning">My Bids</DropdownItem>
+              <DropdownItem key="bids" color="warning" href="/yourbids" >My Bids</DropdownItem>
               <DropdownItem onClick={() => signOut()} key="logout" color="danger">
                 Log Out
               </DropdownItem>

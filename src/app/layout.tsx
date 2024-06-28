@@ -6,8 +6,11 @@ import Navbar from './components/Navbar'
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 
+import {motion,useInView,useAnimation} from 'framer-motion'
+
 import { ourFileRouter } from "./api/uploadthing/core";
 import Scroll from "./components/SmoothScroll";
+import StarsCanvas from "./components/StarsBackground";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

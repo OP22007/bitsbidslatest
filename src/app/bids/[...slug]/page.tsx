@@ -59,7 +59,7 @@ const Bid = () => {
       if (response.ok) {
         const data = await response.json();
         setProduct(data.productbyID);
-        setPrice(data.productbyID.price);
+        setPrice(Number(data.productbyID.price));
       }
     } catch (e) {
       console.error(e);
