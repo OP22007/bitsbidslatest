@@ -85,10 +85,10 @@ export default function Chat() {
     fetchChats()
     CreateroomCode();
   } 
-  if(socket)
-    socket.on("refresh", () => {
-      fetchChats();
-    });
+  // if(socket)
+  //   socket.on("refresh", () => {
+  //     fetchChats();
+  //   });
     if(socket)
     socket.on("Message",(room)=>{
       // setloader(!loader)
@@ -103,7 +103,7 @@ export default function Chat() {
     useEffect(() => {
       if (session) {
         fetchChats();
-        CreateroomCode();
+       
       
       }
     }, [session,email]);
@@ -122,7 +122,7 @@ export default function Chat() {
           if (response.ok) {
             const data = await response.json();
             setChats(data.messages || []);
-           // console.log(data.messages)
+           console.log(data)
           }
         } catch (error) {
           console.error("Failed to fetch chats:", error);
@@ -226,7 +226,7 @@ export default function Chat() {
           </div>
           <div className="flex flex-col w-full lg:w-8/12 h-screen xl:flex items-center ml-4">
             <div className="flex flex-col w-full h-5/6 overflow-y-scroll bg-black/30 backdrop-blur-3xl mb-10 p-2 mt-2 rounded-xl">
-              <div className="flex w-full bg-transparent border-b-1 border-gray-800 rounded-sm p-2">
+              <div className="sticky z-10 top-10 w-full bg-black border-b-1 border-gray-800 rounded-sm p-2">
 
                  <User
                     name={name}
@@ -236,34 +236,45 @@ export default function Chat() {
                   />
                 </div>
                 <ScrollToBottom>
-                  <div className="flex-grow overflow-y-auto">
+                  <div className="flex-grow  min-h-screen overflow-y-auto">
                     {chats &&
                       chats.map((chat: any, index: number) => (
+                         
                         <div
                           key={index}
-                          className="bg-gray-800 p-2 rounded my-1"
+                          
+                          className={` flex flex-wrap text-wrap justify-between p-2 rounded-lg my-1 max-w-[30%] ${
+                            chat.senderID === user?.email
+                              ? 'ml-auto mr-4 mb-2 bg-green-600 rounded-br-none'
+                              : 'mr-auto ml-4 mb-2 bg-gray-500 rounded-bl-none'
+                          }`}
                         >
                           {chat.content}
+                          <span className="text-xs  mt-4">
+          {new Date(chat.createdAt).toLocaleString()}
+        </span>
                         </div>
                       ))}
                   </div>
                 </ScrollToBottom>
-                <div className="flex flex-col w-full lg:flex-row items-center justify-between mt-4">
+                <div className="flex  sticky bottom-0 z-10  w-full  items-center  mt-4">
                   <Textarea
+                    
                     type="text"
                     placeholder="Enter your message here..."
-                    className="chat-box w-full lg:w-10/12 flex items-center"
+                    className="chat-box w-full  lg:w-11/12 flex items-center"
                     minRows={1}
                     maxRows={5}
                     value={inputValue}
                     onChange={(event) => setInputValue(event.target.value)}
+                    radius="none"
                   />
-                  <div className="options flex items-center justify-around w-full lg:w-2/12 mt-2 lg:mt-0">
+                  <div className="options flex items-center w-full lg:w-2/12 lg:mt-0">
                     <Button
-                      className="send h-9 ml-2 z-11"
+                      className="send h-10 rounded-l-none z-11 bg-green-700"
                       isIconOnly
                       type="submit"
-                      color="success"
+                    
                       aria-label="Send"
                       onClick={sendMessage}
                     >

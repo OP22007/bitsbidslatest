@@ -15,11 +15,14 @@ export async function GET(req: NextRequest) {
 
         if (chats) {
             const messages = chats.messages;
-             console.log(messages);
+            // console.log(messages);
 
             return new Response(JSON.stringify({ messages }), { status: 200 });
         } else {
-            return new Response(JSON.stringify({ error: ChatID }), { status: 404 });
+            const message:any ={
+                "messages" :["Send a message to get chat started"]
+            }
+            return new Response(JSON.stringify({ message }), { status:200 });
         }
     } catch (error) {
         console.error("Error retrieving messages:", error);
