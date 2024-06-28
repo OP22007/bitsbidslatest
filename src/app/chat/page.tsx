@@ -80,7 +80,7 @@ export default function Chat() {
   };
   useEffect(() => {
     if (session) {
-      fetchChats();
+     // fetchChats();
       CreateroomCode();
     
     }
@@ -226,7 +226,7 @@ export default function Chat() {
           </div>
           <div className="flex flex-col w-full lg:w-8/12 h-screen xl:flex items-center ml-4">
             <div className="flex flex-col w-full h-5/6 overflow-y-scroll bg-black/30 backdrop-blur-3xl mb-10 p-2 mt-2 rounded-xl">
-              <div className="flex w-full bg-transparent border-b-1 border-gray-800 rounded-sm p-2">
+              <div className="flex sticky top-0 z-10 w-full bg-black border-b-1 border-gray-800 rounded-sm p-2">
                 <User
                     name={name}
                     description={email}
@@ -242,14 +242,14 @@ export default function Chat() {
                         <div
                           key={index}
                           
-                          className={` flex flex-wrap text-wrap justify-between p-2 rounded-lg my-1 max-w-[30%] ${
+                          className={` flex  flex-wrap over whitespace-break-spaces  justify-between p-2 rounded-lg my-1 max-w-[30%] ${
                             chat.senderID === user?.email
                               ? 'ml-auto mr-4 mb-2 bg-green-600 rounded-br-none'
                               : 'mr-auto ml-4 mb-2 bg-gray-500 rounded-bl-none'
                           }`}
                         >
-                          {chat.content}
-                          <span className="text-xs  mt-4">
+                         <p className="text-wrap w-full break-words"> {chat.content}</p>
+                          <span className="text-xs opacity-65  mt-2 ml-auto">
           {new Date(chat.createdAt).toLocaleString()}
         </span>
                         </div>
@@ -261,7 +261,7 @@ export default function Chat() {
                     
                     type="text"
                     placeholder="Enter your message here..."
-                    className="chat-box w-full  lg:w-11/12 flex items-center"
+                    className="chat-box w-full lg:w-11/12 flex items-center"
                     minRows={1}
                     maxRows={5}
                     value={inputValue}
