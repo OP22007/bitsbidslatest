@@ -38,6 +38,7 @@ export const options:NextAuthOptions = {
                 if(email===user.email && password===decryptPassword(user.password)){
                     const username = user.username
                     const email = user.email
+                    const u = await db.collection('users').updateOne({email:email},{$set:{lastLoginAt:new Date()}})
                     return user
                 }else{
                     throw new Error('Invalid Credentials')
@@ -80,6 +81,10 @@ export const options:NextAuthOptions = {
                     email: profile.email,
                 password: "oauth user",
               });
+            }else{
+                let u = await db.collection('users').updateOne({
+                    email:profile.email
+                },{$set:{lastLoginAt:new Date()}})
             }
             return true
         }

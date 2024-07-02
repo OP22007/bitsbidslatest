@@ -21,6 +21,7 @@ export async function PUT(req:NextRequest){
         return new NextResponse(JSON.stringify({error:'Product Not Found'}),{status:404});
     }
     let bids = product.bids||[];
+    let userbids = user.bids||[];
     const bidderID = user.userId
     const bidID = nanoid()
     const time = new Date()
@@ -31,7 +32,14 @@ export async function PUT(req:NextRequest){
         price,
         time
     }
+    const userbid = {
+        bidID,
+        productID,
+        price,
+        time
+    }
     bids.push(bid);
+    userbids.push(userbid)
     const db = client.db("BITSBids");
     console.log(price)
     // console.log(bids)
@@ -39,6 +47,12 @@ export async function PUT(req:NextRequest){
         db.collection("products").updateOne(
             { productID: productID },
             { $set: { bids:bids,price:price } },
+        ),
+    ]);
+    await Promise.all([
+        db.collection("users").updateOne(
+            { userId: bidderID },
+            { $set: { bids:userbids} },
         ),
     ]);
     console.log("Bid successful");

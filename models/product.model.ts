@@ -3,7 +3,7 @@ type Bids = {
   bidID:string;
   bidderID:string;
   price:number;
-  time:string;
+  time:Date;
 }
 const bidsSchema = new Schema({
   bidID:{
@@ -19,7 +19,7 @@ const bidsSchema = new Schema({
     required:true
   },
   time:{
-    type:Schema.Types.String,
+    type:Schema.Types.Date,
     default:new Date(),
     required:true
   }

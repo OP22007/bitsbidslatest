@@ -37,7 +37,7 @@ export default function RootLayout({
            */
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
-          <Navbar />
+          <Navbar/>
         {children}
         </Providers>
       </body>

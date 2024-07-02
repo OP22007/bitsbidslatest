@@ -13,12 +13,25 @@ import { categories } from "../categories";
 import { today, getLocalTimeZone } from "@internationalized/date";
 import { signIn, signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import logo from '../../../public/bitsbids.png'
+import Sidebar from "./Sidebar";
 
 type NavbarProps = {
   logout: boolean;
   user: Object;
   key: number;
 };
+
+interface Bid {
+  userID: string;
+  productID: string;
+  image: { url: string }[];
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+}
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,10 +40,22 @@ export default function App() {
   const session = useSession();
   const user = session.data?.user;
 
+
   let [value, setValue] = useState({
     start: today(getLocalTimeZone()),
     end: today(getLocalTimeZone()).add({ weeks: 1 }),
   });
+
+  const [searchpn, setSearchpn] = useState<string>("");
+  const [searchsn, setSearchsn] = useState<string>("");
+  const [bids, setBids] = useState<Bid[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const handleCategoryChange = (category: string, isSelected: boolean) => {
+    setSelectedCategories((prev) =>
+      isSelected ? [...prev, category] : prev.filter((cat) => cat !== category)
+    );
+  };
 
   interface Category {
     key: number;
@@ -66,35 +91,35 @@ export default function App() {
   }
 
   return (
-    <Navbar isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
+    <Navbar className="dark" isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent className="sm:hidden" justify="start">
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
       </NavbarContent>
 
       <NavbarContent className="sm:hidden pr-3" justify="center">
         <NavbarBrand>
-          <p className="font-bold text-inherit">ACME</p>
+          <p className="font-bold text-xl text-inherit">BITSBids</p>
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarBrand className="hidden sm:flex">
-        <p className="font-bold text-inherit">ACME</p>
+        <p className="font-bold text-2xl text-inherit">BITSBids</p>
       </NavbarBrand>
 
       <NavbarContent className="hidden sm:flex gap-4 justify-center">
         <NavbarItem>
           <Link color="foreground" href="#">
-            Features
+            About Us
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
           <Link href="#" aria-current="page">   
-            Customers
+            Bids
           </Link>
         </NavbarItem>
         <NavbarItem>
           <Link color="foreground" href="#">
-            Integrations
+            Chats
           </Link>
         </NavbarItem>
       </NavbarContent>
@@ -143,7 +168,7 @@ export default function App() {
               <DropdownItem key="profile" color="success" className="h-14 gap-1">
                 <p className="font-semibold">Signed in as <span className="font-extrabold text-lg mx-1">{user.name}</span></p>
               </DropdownItem>
-              <DropdownItem key="profile" color="warning">My Profile</DropdownItem>
+              <DropdownItem key="profile" href="/myprofile" color="warning">My Profile</DropdownItem>
               <DropdownItem key="update_profile" color="warning">Update Profile</DropdownItem>
               <DropdownItem key="bids" color="warning" href="/yourbids" >My Bids</DropdownItem>
               <DropdownItem onClick={() => signOut()} key="logout" color="danger">
@@ -155,7 +180,15 @@ export default function App() {
       )}
 
       <NavbarMenu className="dark">
-        <NavbarMenuItem>
+          <Sidebar searchpn={searchpn}
+          setSearchpn={setSearchpn}
+          searchsn={searchsn}
+          setSearchsn={setSearchsn}
+          value={value}
+          setValue={setValue}
+          selectedCategories={selectedCategories}
+          handleCategoryChange={handleCategoryChange}/>
+        {/* <NavbarMenuItem>
           <h1 className="font-extrabold text-xl mb-4 text-white">Search By Product Name</h1>
           <Input 
             classNames={{
@@ -205,7 +238,7 @@ export default function App() {
               {category.label}
             </Checkbox>
           ))}
-        </NavbarMenuItem>
+        </NavbarMenuItem> */}
       </NavbarMenu>
     </Navbar>
   );

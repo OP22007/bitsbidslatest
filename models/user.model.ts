@@ -2,7 +2,31 @@ import mongoose, { Schema, Model, Document } from 'mongoose';
 
 // Define the message schema for better reusability and clarity
 
-
+type Bid = {
+  bidID:string;
+  productID:string;
+  price:number;
+  time:Date;
+}
+const bidsSchema = new Schema({
+  bidID:{
+    type:Schema.Types.String,
+    required:true,
+  },
+  productID:{
+    type:Schema.Types.String,
+    required:true
+  },
+  price:{
+    type:Schema.Types.Number,
+    required:true
+  },
+  time:{
+    type:Schema.Types.Date,
+    default:new Date(),
+    required:true
+  }
+})
 
 
 export type UserDocument = Document & {
@@ -12,7 +36,10 @@ export type UserDocument = Document & {
   phone: number;
   email: string;
   password: string;
-  enabled: boolean;
+  createdAt:Date;
+  lastLoginAt:Date;
+  isPremium: boolean;
+  bids:Bid[]
 };
 
 export type UserInput = {
@@ -22,7 +49,10 @@ export type UserInput = {
   phone: UserDocument['phone'];
   email: UserDocument['email'];
   password: UserDocument['password'];
-  enabled: UserDocument['enabled'];
+  createdAt: UserDocument['createdAt']
+  lastLoginAt: UserDocument['lastLoginAt']
+  isPremium: UserDocument['isPremium'];
+  bids:UserDocument['bids']
 };
 
  export const usersSchema = new Schema(
@@ -54,11 +84,20 @@ export type UserInput = {
       type: Schema.Types.String,
       required: true,
     },
-  
-    enabled: {
-      type: Schema.Types.Boolean,
-      default: true,
+    createdAt:{
+      type:Schema.Types.Date,
+      required:true,
+      default:new Date()
     },
+    lastLoginAt:{
+      type:Schema.Types.Date,
+      required:true,
+    },
+    isPremium: {
+      type: Schema.Types.Boolean,
+      default: false,
+    },
+    bids:[bidsSchema]
   },
   {
     collection: 'users',

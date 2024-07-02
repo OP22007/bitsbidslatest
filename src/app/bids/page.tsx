@@ -105,14 +105,14 @@ function Bids() {
         />
       </motion.div>
       <div className="flex-1 z-10">
-        <div className="flex flex-wrap " style={{marginLeft:'400px'}}>
+        <div className="hidden md:flex flex-wrap" style={{marginLeft:'400px'}}>
           {bids.map((bid: Bid) => (
             <motion.div
               key={bid.productID}
               initial="hidden"
               animate="visible"
               variants={slideInFromTop}
-              className="flex flex-col baseinfo h-fit mx-4 my-2 p-5"
+              className="flex flex-col baseinfo mx-4 my-2 p-5"
               style={{
                 border: "solid #272829",
                 width: "340px",
@@ -122,10 +122,10 @@ function Bids() {
             >
               <Image
                 src={bid.image[0].url}
-                className="w-full h-1/2"
-                width={300}
-                height={300}
-                style={{ borderRadius: "5px" }}
+                className="w-full"
+                // width={300}
+                // height={300}
+                style={{ borderRadius: "5px",width:'300px',height:'350px' }}
                 alt={bid.name}
               />
               <div
@@ -156,6 +156,69 @@ function Bids() {
                   Buy Now
                 </Button>
                 <Button variant="ghost" color="danger">
+                  <Link
+                    passHref={true}
+                    href={{ pathname: `/bids/${bid.productID}`, query: { id: bid.productID } }}
+                  >
+                    More Details
+                  </Link>
+                </Button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        <div className="flex flex-wrap justify-center md:hidden">
+          {bids.map((bid: Bid) => (
+            <motion.div
+              key={bid.productID}
+              initial="hidden"
+              animate="visible"
+              variants={slideInFromTop}
+              className="flex flex-col baseinfo mx-3 my-2 p-3"
+              style={{
+                border: "solid #272829",
+                width: "170px",
+                borderWidth: "thin",
+                borderRadius: "5px",
+              }}
+            >
+              <Image
+                src={bid.image[0].url}
+                className="w-full"
+                // width={300}
+                // height={300}
+                style={{ borderRadius: "5px",width:'170px',height:'160px' }}
+                alt={bid.name}
+              />
+              <div
+                className="flex justify-between name font-extrabold mt-4 text-lg"
+                style={{ alignItems: "center" }}
+              >
+                <h1 className="overflow-hidden h-8">{bid.name}</h1>
+                {/* <Button
+                  isIconOnly
+                  color="danger"
+                  // size="sm"
+                  aria-label="Like"
+                  startContent={<HeartIcon />}
+                  style={{ color: "white",width:'10px' }}
+                ></Button> */}
+              </div>
+              <div
+                className="price font-extrabold text-lg"
+                style={{
+                  background: "linear-gradient(45deg, cyan, yellow)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Rs {bid.price}
+              </div>
+              <div className="buttons flex  mt-2">
+                <Button className="mr-2" variant="ghost"size="sm" color="success">
+                  Buy Now
+                </Button>
+                <Button variant="ghost" size="sm" color="danger" style={{width:'100px'}}>
                   <Link
                     passHref={true}
                     href={{ pathname: `/bids/${bid.productID}`, query: { id: bid.productID } }}

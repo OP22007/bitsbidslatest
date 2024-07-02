@@ -49,3 +49,30 @@ export async function POST(req:NextRequest){
           return new Response (JSON.stringify({ error: "User already exists" }))
         }
 }
+export async function PUT(req: NextRequest) {
+  try {
+      const { email, name, age, phone } = await req.json();
+      console.log(email,name,age,phone)
+      if (!email || !name || !age || !phone) {
+          return new Response(JSON.stringify({ message: 'The fields email, name, age, and phone are required' }), { status: 400 });
+      }
+
+      const client = await clientPromise;
+      const db = client.db("BITSBids");
+
+      const result = await db.collection("users").updateOne(
+          { email: email },
+          { $set: { name: name, age: age, phone: phone } }
+      );
+
+      if (result.matchedCount === 0) {
+          return new Response(JSON.stringify({ message: 'User not found' }), { status: 404 });
+      }
+
+      return new Response(JSON.stringify({ success: "Success" }), { status: 200 });
+  } catch (error) {
+      console.error("Error updating user:", error);
+      return new Response(JSON.stringify({ message: 'Internal Server Error' }), { status: 500 });
+  }
+}
+

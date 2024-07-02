@@ -77,7 +77,7 @@ const getUsers =async ()=>{
   };
   useEffect(()=>{
     getUsers();
-  },[]);
+  },[onlineUsers]);
   return (
     <>
     <div id="userList flex flex-col" className="userlist mt-2 ">

@@ -46,7 +46,7 @@ export default function Chat() {
       sx: {
         bgcolor: stringToColor(name),
       },
-      children: `${name.split(" ")[0][0].toLocaleUpperCase()}`,
+      children: `${name.split(" ")[0][0].toUpperCase()}`,
     };
   }
 
@@ -58,8 +58,7 @@ export default function Chat() {
       newSocket.disconnect();
     };
   }, [user]);
-  // socket.emit("joined","new user")
-  // socket.connect();
+
   useEffect(() => {
     if (socket == null) return;
     socket.emit("addNewUser", user?.email);
@@ -67,9 +66,10 @@ export default function Chat() {
       setOnlineUsers(res);
     });
   }, [socket]);
-  const CreateroomCode = () => {
+
+  const createRoomCode = () => {
     const factor = user?.email?.localeCompare(email);
-    const roomName = factor == -1 ? user?.email + email : email + user?.email;
+    const roomName = factor === -1 ? user?.email + email : email + user?.email;
     if (roomCode) {
       if (socket == null) return;
       socket.emit("LeaveRoom", roomCode);
@@ -78,91 +78,81 @@ export default function Chat() {
     if (socket == null) return;
     socket.emit("joinRoom", roomName);
   };
+
   useEffect(() => {
     if (session) {
-     // fetchChats();
-      CreateroomCode();
-    
+      createRoomCode();
     }
-  }, [session,email]);
-  const handleData = (userID: string, username: string, useremail: string) => {
+  }, [email, session]);
+
+  const handleData = async (userID: string, username: string, useremail: string) => {
     setReceiverID(userID);
     setName(username);
     setEmail(useremail);
-    fetchChats()
-    CreateroomCode();
+    await createRoomCode();
+    fetchChats();
   }
-    if(socket==null)return;
+
+  useEffect(() => {
+    if (socket == null) return;
     socket.on("refresh", () => {
       fetchChats();
     });
-    if(socket==null)return;
-    socket!.on("Message",(room)=>{
-      // setloader(!loader)
-           fetchChats();
-           
-    })
-     
+    socket.on("Message", () => {
+      fetchChats();
+    });
+  }, [socket]);
 
-    
-   
-    
-
-    const fetchChats = async () => {
-      if (session && email) {
-       await  CreateroomCode()
-       const ChatID =roomCode
-        try {
-          const response = await fetch(
-            `http://localhost:3000/api/getchats?ChatID=${encodeURIComponent(ChatID)}`,
-            {
-              method: "GET",
-            }
-          );
-          if (response.ok) {
-            const data = await response.json();
-            setChats(data.messages || []);
-           console.log(data)
-          }
-        } catch (error) {
-          console.error("Failed to fetch chats:", error);
-        }
-      }
-    };
-
-    const sendMessage = async () => {
-      if (!inputValue.trim()) {
-        alert("Cannot send an empty text");
-        return;
-      }
-     await CreateroomCode();
-      const senderEmail = user?.email || "";
-      const myChat = {
-        ChatID:roomCode,
-        senderID: senderEmail,
-        receiverID: email,
-        message: inputValue,
-      };
-     CreateroomCode();
-     if(socket) 
-     socket.emit("private message", email, inputValue, senderEmail,roomCode);
-//Db saving Mech
+  const fetchChats = async () => {
+    if (session && email) {
+      const roomName = roomCode || (user?.email?.localeCompare(email) === -1 ? user?.email + email : email + user?.email);
       try {
-        const res = await fetch("http://localhost:3000/api/addchats", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(myChat),
-        });
-        if (res.ok) {
-          setInputValue("");
-          if(socket)
-          socket.emit("Refresh",roomCode)
-       
+        const response = await fetch(
+          `http://localhost:3000/api/getchats?ChatID=${encodeURIComponent(roomName)}`,
+          {
+            method: "GET",
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setChats(data.messages || []);
         }
       } catch (error) {
-        console.error("Failed to send message:", error);
+        console.error("Failed to fetch chats:", error);
       }
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!inputValue.trim()) {
+      alert("Cannot send an empty text");
+      return;
+    }
+    await createRoomCode();
+    const senderEmail = user?.email || "";
+    const myChat = {
+      ChatID: roomCode,
+      senderID: senderEmail,
+      receiverID: email,
+      message: inputValue,
     };
+
+    if (socket) socket.emit("private message", email, inputValue, senderEmail, roomCode);
+
+    try {
+      const res = await fetch("http://localhost:3000/api/addchats", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(myChat),
+      });
+      if (res.ok) {
+        setInputValue("");
+        if (socket) socket.emit("Refresh", roomCode);
+      }
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
+  };
 
   return (
     <>
@@ -228,64 +218,61 @@ export default function Chat() {
             <div className="flex flex-col w-full h-5/6 overflow-y-scroll bg-black/30 backdrop-blur-3xl mb-10 p-2 mt-2 rounded-xl">
               <div className="flex sticky top-0 z-10 w-full bg-black border-b-1 border-gray-800 rounded-sm p-2">
                 <User
-                    name={name}
-                    description={email}
-                    avatarProps={{ color: "primary" }}
-                    onChange={fetchChats}
-                  />
+                  name={name}
+                  description={email}
+                  avatarProps={{ color: "primary" }}
+                  onChange={fetchChats}
+                />
+              </div>
+              <ScrollToBottom>
+                <div className="flex-grow min-h-screen overflow-y-auto">
+                  {chats &&
+                    chats.map((chat: any, index: number) => (
+                      <div
+                        key={index}
+                        className={`flex flex-wrap whitespace-break-spaces justify-between p-2 rounded-lg my-1 max-w-[30%] ${
+                          chat.senderID === user?.email
+                            ? 'ml-auto mr-4 mb-2 bg-green-600 rounded-br-none'
+                            : 'mr-auto ml-4 mb-2 bg-gray-500 rounded-bl-none'
+                        }`}
+                      >
+                        <p className="text-wrap w-full break-words">
+                          {chat.content}
+                        </p>
+                        <span className="text-xs opacity-65 mt-2 ml-auto">
+                          {new Date(chat.createdAt).toLocaleString()}
+                        </span>
+                      </div>
+                    ))}
                 </div>
-                <ScrollToBottom>
-                  <div className="flex-grow  min-h-screen overflow-y-auto">
-                    {chats &&
-                      chats.map((chat: any, index: number) => (
-                         
-                        <div
-                          key={index}
-                          
-                          className={` flex  flex-wrap over whitespace-break-spaces  justify-between p-2 rounded-lg my-1 max-w-[30%] ${
-                            chat.senderID === user?.email
-                              ? 'ml-auto mr-4 mb-2 bg-green-600 rounded-br-none'
-                              : 'mr-auto ml-4 mb-2 bg-gray-500 rounded-bl-none'
-                          }`}
-                        >
-                         <p className="text-wrap w-full break-words"> {chat.content}</p>
-                          <span className="text-xs opacity-65  mt-2 ml-auto">
-          {new Date(chat.createdAt).toLocaleString()}
-        </span>
-                        </div>
-                      ))}
-                  </div>
-                </ScrollToBottom>
-                <div className="flex  sticky bottom-0 z-10  w-full  items-center  mt-4">
-                  <Textarea
-                    
-                    type="text"
-                    placeholder="Enter your message here..."
-                    className="chat-box w-full lg:w-11/12 flex items-center"
-                    minRows={1}
-                    maxRows={5}
-                    value={inputValue}
-                    onChange={(event) => setInputValue(event.target.value)}
-                    radius="none"
-                  />
-                  <div className="options flex items-center w-full lg:w-2/12 lg:mt-0">
-                    <Button
-                      className="send h-10 rounded-l-none z-11 bg-green-700"
-                      isIconOnly
-                      type="submit"
-                    
-                      aria-label="Send"
-                      onClick={sendMessage}
-                    >
-                      <Image src="send2.png" />
-                    </Button>
-                  </div>
+              </ScrollToBottom>
+              <div className="flex sticky bottom-0 z-10 w-full items-center mt-4">
+                <Textarea
+                  type="text"
+                  placeholder="Enter your message here..."
+                  className="chat-box w-full lg:w-11/12 flex items-center"
+                  minRows={1}
+                  maxRows={5}
+                  value={inputValue}
+                  onChange={(event) => setInputValue(event.target.value)}
+                  radius="none"
+                />
+                <div className="options flex items-center w-full lg:w-2/12 lg:mt-0">
+                  <Button
+                    className="send h-10 rounded-l-none z-11 bg-green-700"
+                    isIconOnly
+                    type="submit"
+                    aria-label="Send"
+                    onClick={sendMessage}
+                  >
+                    <Image src="send2.png" />
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </>
-    );
-  };
-
+      </div>
+    </>
+  );
+}
