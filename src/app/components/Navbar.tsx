@@ -91,7 +91,7 @@ export default function App() {
   }
 
   return (
-    <Navbar className="dark" isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
+    <Navbar className="dark bg-transparent" isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent className="sm:hidden" justify="start">
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
       </NavbarContent>
@@ -106,19 +106,19 @@ export default function App() {
         <p className="font-bold text-2xl text-inherit">BITSBids</p>
       </NavbarBrand>
 
-      <NavbarContent className="hidden sm:flex gap-4 justify-center">
+      <NavbarContent className="hidden sm:flex gap-12 justify-center">
         <NavbarItem>
           <Link color="foreground" href="#">
             About Us
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link href="#" aria-current="page">   
+          <Link href="/bids" aria-current="page">   
             Bids
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="/chat">
             Chats
           </Link>
         </NavbarItem>

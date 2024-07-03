@@ -37,7 +37,7 @@ const timeDifference = (bidTime: Date) => {
 
 export default function LatestActivity({ user }: HeaderProps) {
   return (
-    <div className="p-10 h-[550px] w-[530px] bg-opacity-60 bg-zinc-800 rounded-lg text-white overflow-y-scroll" style={{ borderRadius: '50px' }}>
+    <div className="p-10 h-[550px] w-[532px] bg-opacity-60 bg-zinc-800 rounded-lg text-white overflow-y-scroll" style={{ borderRadius: '50px' }}>
       <h2 className="text-xl font-bold mb-4">Latest Activity</h2>
       <ul>
         {user&&user.bids ? (

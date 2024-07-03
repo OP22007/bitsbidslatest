@@ -41,7 +41,8 @@ export async function POST(req:NextRequest){
                 age: userInput.age,
                 phone: userInput.phone,
                 email: userInput.email,
-            password: userInput.password,
+                password: userInput.password,
+                createdAt: new Date()
           });
           // console.log(u);
           return new Response (JSON.stringify({ success: "Success" }))
