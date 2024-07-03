@@ -29,7 +29,7 @@
     "chartjs-plugin-zoom": "^2.0.1",
     "crypto-ts": "^1.0.2",
     "easy-magnify-waft": "^2.0.2",
-    "emoji-picker-react": "^4.9.4",
+    "emoji-picker-react": "^4.11.0",
     "framer-motion": "^11.2.10",
     "jsonwebtoken": "^9.0.2",
     "lottie-react": "^2.4.0",

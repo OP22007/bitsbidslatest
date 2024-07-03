@@ -34,7 +34,7 @@ function Sidebar({
   handleCategoryChange,
 }: SidebarProps) {
   return (
-    <div className="left-menu xl:ml-12 overflow-y-auto h-full p-2 z-20 fixed" >
+    <div className="left-menu xl:ml-10 overflow-y-auto h-full p-2 z-20 fixed" >
       <div className="hidden xl:flex flex-col my-8 mr-8">
         <h1 className="font-extrabold text-xl mb-4">Search By Product Name</h1>
         <Input

@@ -117,7 +117,7 @@ function Bids() {
               className="flex flex-col baseinfo mx-4 my-2 p-5"
               style={{
                 border: "solid #272829",
-                width: "250px",
+                width: "240px",
                 height:"440px",
                 borderWidth: "thin",
                 borderRadius: "5px",

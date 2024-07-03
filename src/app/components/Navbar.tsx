@@ -16,6 +16,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import logo from '../../../public/bitsbids.png'
 import Sidebar from "./Sidebar";
+import { usePathname } from "next/navigation";
 
 type NavbarProps = {
   logout: boolean;
@@ -33,7 +34,10 @@ interface Bid {
   price: number;
 }
 
-export default function App() {
+export default function App() { 
+  const pathname = usePathname();
+  const isChatPage = pathname.startsWith('/chat');
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selected, setSelected] = useState<boolean>(false);
   const [init, setInit] = useState<boolean>(true);
@@ -88,6 +92,9 @@ export default function App() {
       },
       children: `${name.split(' ')[0][0].toLocaleUpperCase()}`,
     };
+  }
+  if(isChatPage){
+    return null;
   }
 
   return (

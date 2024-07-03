@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Badge, User } from "@nextui-org/react";
+import { Badge, Divider, User } from "@nextui-org/react";
 import { Textarea } from "@nextui-org/input";
 import { Image } from "@nextui-org/image";
 import UserList from "../components/userList";
@@ -8,12 +8,10 @@ import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { Socket, io } from "socket.io-client";
 import ScrollToBottom from "react-scroll-to-bottom";
-import AutoScrollContainer from "react-auto-scroll-container";
 import { Avatar as MuiAvatar } from "@mui/material";
-import chatBg from '../../../public/ChatBg.jpg'
-import { url } from "inspector";
 import { IoSend } from "react-icons/io5";
-import ChatLayout from "../chatLayout";
+import EmojiPicker from 'emoji-picker-react'
+
 export default function Chat() {
   const { data: session } = useSession();
   const [chats, setChats] = useState<any[]>([]);
@@ -159,7 +157,11 @@ export default function Chat() {
 
   return (
     <>
-   <ChatLayout>
+      <style jsx global>{`
+        body {
+          overflow: hidden;
+        }
+      `}</style>
       <div id="chatbox">
         <div className="grads">
           <div
@@ -210,11 +212,11 @@ export default function Chat() {
         <div  className="md:hidden absolute z-20">
     
         </div>
+              
         <div className="flex flex-col lg:flex-row w-full  overflow-y-hidden">
        
-         <div className="flex mt-5 w-8/12  md:2/12 lg:w-3/12 min-w-56  ml-10">
-            <div className="flex flex-grow overflow-y-auto  h-5/6 flex-col w-full xl:items-start z-10 p-2 bg-transparent">
-              <p className="text-xl font-bold ml-1">Chats</p>
+         <div className="flex mt-12 w-8/12 bg-zinc-900  md:2/12 lg:w-3/12 min-w-56  ml-10">
+            <div className="flex flex-grow overflow-y-auto  h-5/6 flex-col w-full xl:items-start z-10 p-2 bg-zinc-800">
               <UserList
                 sendUserProfile={handleData}
                 onlineUsers={onlineUsers}
@@ -222,31 +224,37 @@ export default function Chat() {
               />
             </div>
           </div>
-      
           <div className="flex flex-col w-full  lg:w-9/12 h-screen xl:flex items-center justify-start ml-4">
-          <div className="flex fixed   overflow-hidden  z-20 w-9/12 bg-black border-b-1 border-gray-800 rounded-sm p-2">
+          <div className="flex fixed bg-zinc-900  overflow-hidden  z-20 w-[1960px] h-[50px] border-b-1 border-gray-800 rounded-sm p-2">
+                <div className="flex items-center w-[2000px]">
+                <div className="ml-[50px] font-bold text-xl tracking-wide">
+                  Chats
+                </div>
+                <Divider className="w-2 h-12 ml-[285px]" orientation="vertical"/>
                 <User
+                  className="ml-5"
                   name={name}
                   description={email}
                   avatarProps={{ color: "primary" }}
                   onChange={fetchChats}
                 />
               </div>
-            <div className={`flex flex-col w-full h-full overflow-y-scroll b-10 p-2 mt-2 rounded-xl  `} style={{backgroundImage:"url('ChatBg.jpg')",backgroundSize:'cover',backgroundPosition: 'center',backgroundRepeat: 'no-repeat'}}>
+              </div>
+            <div className={`flex flex-col w-full h-full bottom-7 overflow-y-scroll b-10 p-2 mr-5 mt-20  chat-container bg-opacity-45` }>
               
-              <ScrollToBottom>
-                <div className="flex-grow relative z-10 overflow-y-auto mt-24 mb-28 ">
+              <ScrollToBottom >
+                <div className="chat-content flex-grow relative z-10 overflow-y-auto mt-24 mb-28 ">
                   {chats &&
                     chats.map((chat: any, index: number) => (
                       <div
                         key={index}
                         className={`flex flex-wrap whitespace-break-spaces justify-between p-2 rounded-lg my-1 max-w-[30%] ${
                           chat.senderID === user?.email
-                            ? 'ml-auto mr-4 mb-2 bg-green-600 rounded-br-none'
-                            : 'mr-auto ml-4 mb-2 bg-gray-500 rounded-bl-none'
+                            ? 'ml-auto mr-4 mb-2 bg-emerald-600 rounded-br-none'
+                            : 'mr-auto ml-4 mb-2 bg-zinc-800 rounded-bl-none'
                         }`}
                       >
-                        <p className="text-wrap w-full break-words">
+                        <p className="text-wrap w-full break-words tracking-wide">
                           {chat.content}
                         </p>
                         <span className="text-xs opacity-65 mt-2 ml-auto">
@@ -256,20 +264,20 @@ export default function Chat() {
                     ))}
                 </div>
               </ScrollToBottom>
-              <div className="absolute inset-0 bg-black opacity-50"></div>
-   
             </div>
             <div className=" hidden lg:flex z-20 w-9/12  items-center justify-end mt-4">
+            <div className="flex">
                 <Textarea
                   type="text"
                   placeholder="Enter your message here..."
-                  className="chat-box  fixed right-16 bottom-1 w-8/12 items-center"
+                  className="chat-box  fixed right-16 bottom-1 w-[1060px] items-center"
                   minRows={1}
                   maxRows={5}
                   value={inputValue}
                   onChange={(event) => setInputValue(event.target.value)}
                   radius="none"
                 />
+                </div>
                 <div className="options flex items-center w-full lg:w-2/12 lg:mt-0">
                   <Button
                     className="send h-10 fixed z-20   bottom-1 right-6 rounded-l-none z-11 bg-green-700"
@@ -286,8 +294,6 @@ export default function Chat() {
           
         </div>
       </div>
-      </ChatLayout>
-      </>
-    
+    </>
   );
 }

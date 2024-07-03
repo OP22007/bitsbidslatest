@@ -1,5 +1,5 @@
 import React from "react";
-import {Avatar, User} from "@nextui-org/react";
+import {Avatar, Divider, User} from "@nextui-org/react";
 import  samplejson from "./MOCK_DATA.json"
 import { useState,useEffect } from "react";
 import { Badge } from "@nextui-org/react";
@@ -80,13 +80,12 @@ const getUsers =async ()=>{
   },[onlineUsers]);
   return (
     <>
-    <div id="userList flex flex-col" className="userlist mt-2 ">
+    <div id="userList flex flex-col" className="userlist mt-2 mb-40 ">
      
     {
         users.map((element)=>(
-           
-            <div key={element.userID} className="mb-4  p-2 rounded-xl" onClick={()=>{OpenChat(element.userID,element.name, element.email)}}>
-            
+           <>
+            <div key={element.userID} className="my-1 cursor-pointer  p-2 rounded-xl hover:bg-neutral-700" onClick={()=>{OpenChat(element.userID,element.name, element.email)}}>
                 <div   
                 className="flex"
                 style={{alignItems:'center'}}
@@ -117,6 +116,8 @@ const getUsers =async ()=>{
                 </div>
            </div>
            </div>
+                <Divider orientation="horizontal" className="w-80"/>
+            </>
         ))
      
     }
