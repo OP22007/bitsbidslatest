@@ -117,7 +117,8 @@ function Bids() {
               className="flex flex-col baseinfo mx-4 my-2 p-5"
               style={{
                 border: "solid #272829",
-                width: "340px",
+                width: "250px",
+                height:"440px",
                 borderWidth: "thin",
                 borderRadius: "5px",
               }}
@@ -127,14 +128,14 @@ function Bids() {
                 className="w-full"
                 // width={300}
                 // height={300}
-                style={{ borderRadius: "5px",width:'300px',height:'350px' }}
+                style={{ borderRadius: "5px",width:'200px',height:'250px' }}
                 alt={bid.name}
               />
               <div
-                className="flex justify-between name font-extrabold my-4 text-2xl"
-                style={{ alignItems: "center" }}
+                className="flex justify-between name font-bold mt-4 h-10 text-lg"
+                style={{ alignItems: "start" }}
               >
-                <h1>{bid.name}</h1>
+                <h1 className="h-fit">{bid.name}</h1>
                 <Button
                   isIconOnly
                   color="danger"
@@ -144,7 +145,7 @@ function Bids() {
                 ></Button>
               </div>
               <div
-                className="price font-extrabold text-2xl"
+                className="price font-extrabold text-lg mt-2"
                 style={{
                   background: "linear-gradient(45deg, cyan, yellow)",
                   WebkitBackgroundClip: "text",
@@ -153,7 +154,7 @@ function Bids() {
               >
                 Rs {bid.price}
               </div>
-              <div className="buttons flex justify-around mx-8 mt-8">
+              <div className="buttons flex justify-around mt-4 gap-3">
                 <Button variant="ghost" color="success">
                   Buy Now
                 </Button>
@@ -193,7 +194,7 @@ function Bids() {
                 alt={bid.name}
               />
               <div
-                className="flex justify-between name font-extrabold mt-4 text-lg"
+                className="flex justify-between name font-bold mt-4 text-lg"
                 style={{ alignItems: "center" }}
               >
                 <h1 className="overflow-hidden h-8">{bid.name}</h1>
