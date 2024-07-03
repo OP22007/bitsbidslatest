@@ -12,6 +12,7 @@ import Sidebar from "../components/Sidebar";
 import {motion} from 'framer-motion'
 import { slideInFromLeft, slideInFromTop } from "../utils/motion";
 
+
 interface Category {
   key: number;
   label: string;
@@ -86,6 +87,7 @@ function Bids() {
   return (
     
     <div className="flex mt-10">
+
       <div aria-hidden="true" className="fixed hidden dark:md:block dark:opacity-70 -top-[80%] -right-[60%] 2xl:-top-[60%] 2xl:-right-[45%] z-10 rotate-12">
         <img src="https://nextui.org/gradients/docs-right.png" className="relative z-10 opacity-100 shadow-black/5 data-[loaded=true]:opacity-100 shadow-none transition-transform-opacity motion-reduce:transition-none !duration-300 rounded-large" alt="docs right background" data-loaded="true" />
       </div>

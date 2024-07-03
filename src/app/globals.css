@@ -35,24 +35,7 @@ body {
 
 /* Works fine on the "thumb", but not on the track */
 
-::-webkit-scrollbar-thumb {
-  background-color: #2d2d2d;
-  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
-  border-radius: 100px;
-}
-::-webkit-scrollbar{width: 8px;}
-::-webkit-scrollbar-track{
-  border-radius: 100px;
-  background-color: #1a1a1a;
-}
-::-webkit-scrollbar-thumb:hover{
-  background-color: #3a3a3a;
 
-}
-
-.cursive {
-  /* font-family: "Cedarville Cursive", cursive; */
-}
 .Welcome-text {
   background: linear-gradient(
       0deg,

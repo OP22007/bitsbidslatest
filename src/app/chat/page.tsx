@@ -10,7 +10,10 @@ import { Socket, io } from "socket.io-client";
 import ScrollToBottom from "react-scroll-to-bottom";
 import AutoScrollContainer from "react-auto-scroll-container";
 import { Avatar as MuiAvatar } from "@mui/material";
-
+import chatBg from '../../../public/ChatBg.jpg'
+import { url } from "inspector";
+import { IoSend } from "react-icons/io5";
+import ChatLayout from "../chatLayout";
 export default function Chat() {
   const { data: session } = useSession();
   const [chats, setChats] = useState<any[]>([]);
@@ -22,7 +25,7 @@ export default function Chat() {
   const [roomCode, setRoomcode] = useState<string>("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
-
+    
   console.log("onlineUsers", onlineUsers);
   function stringToColor(string: string) {
     let hash = 0;
@@ -41,7 +44,7 @@ export default function Chat() {
 
     return color;
   }
-  function stringAvatar(name: string) {
+  function stringAvatar(name: string) {   
     return {
       sx: {
         bgcolor: stringToColor(name),
@@ -156,6 +159,7 @@ export default function Chat() {
 
   return (
     <>
+   <ChatLayout>
       <div id="chatbox">
         <div className="grads">
           <div
@@ -203,9 +207,13 @@ export default function Chat() {
             />
           </div>
         </div>
-        <div className="flex flex-col lg:flex-row w-full justify-center xl:justify-start">
-          <div className="flex mt-5 w-full lg:w-8/12 min-w-2xl sm:max-w-xl xl:w-3/12 xl:ml-10 overflow-y-scroll">
-            <div className="flex flex-col w-full xl:items-start z-10 p-2 bg-transparent">
+        <div  className="md:hidden absolute z-20">
+    
+        </div>
+        <div className="flex flex-col lg:flex-row w-full  overflow-y-hidden">
+       
+         <div className="flex mt-5 w-8/12  md:2/12 lg:w-3/12 min-w-56  ml-10">
+            <div className="flex flex-grow overflow-y-auto  h-5/6 flex-col w-full xl:items-start z-10 p-2 bg-transparent">
               <p className="text-xl font-bold ml-1">Chats</p>
               <UserList
                 sendUserProfile={handleData}
@@ -214,9 +222,9 @@ export default function Chat() {
               />
             </div>
           </div>
-          <div className="flex flex-col w-full lg:w-8/12 h-screen xl:flex items-center ml-4">
-            <div className="flex flex-col w-full h-5/6 overflow-y-scroll bg-black/30 backdrop-blur-3xl mb-10 p-2 mt-2 rounded-xl">
-              <div className="flex sticky top-0 z-10 w-full bg-black border-b-1 border-gray-800 rounded-sm p-2">
+      
+          <div className="flex flex-col w-full  lg:w-9/12 h-screen xl:flex items-center justify-start ml-4">
+          <div className="flex fixed   overflow-hidden  z-20 w-9/12 bg-black border-b-1 border-gray-800 rounded-sm p-2">
                 <User
                   name={name}
                   description={email}
@@ -224,8 +232,10 @@ export default function Chat() {
                   onChange={fetchChats}
                 />
               </div>
+            <div className={`flex flex-col w-full h-full overflow-y-scroll b-10 p-2 mt-2 rounded-xl  `} style={{backgroundImage:"url('ChatBg.jpg')",backgroundSize:'cover',backgroundPosition: 'center',backgroundRepeat: 'no-repeat'}}>
+              
               <ScrollToBottom>
-                <div className="flex-grow min-h-screen overflow-y-auto">
+                <div className="flex-grow relative z-10 overflow-y-auto mt-24 mb-28 ">
                   {chats &&
                     chats.map((chat: any, index: number) => (
                       <div
@@ -246,11 +256,14 @@ export default function Chat() {
                     ))}
                 </div>
               </ScrollToBottom>
-              <div className="flex sticky bottom-0 z-10 w-full items-center mt-4">
+              <div className="absolute inset-0 bg-black opacity-50"></div>
+   
+            </div>
+            <div className=" hidden lg:flex z-20 w-9/12  items-center justify-end mt-4">
                 <Textarea
                   type="text"
                   placeholder="Enter your message here..."
-                  className="chat-box w-full lg:w-11/12 flex items-center"
+                  className="chat-box  fixed right-16 bottom-1 w-8/12 items-center"
                   minRows={1}
                   maxRows={5}
                   value={inputValue}
@@ -259,20 +272,22 @@ export default function Chat() {
                 />
                 <div className="options flex items-center w-full lg:w-2/12 lg:mt-0">
                   <Button
-                    className="send h-10 rounded-l-none z-11 bg-green-700"
+                    className="send h-10 fixed z-20   bottom-1 right-6 rounded-l-none z-11 bg-green-700"
                     isIconOnly
                     type="submit"
                     aria-label="Send"
                     onClick={sendMessage}
                   >
-                    <Image src="send2.png" />
+                 <IoSend />
                   </Button>
                 </div>
               </div>
-            </div>
           </div>
+          
         </div>
       </div>
-    </>
+      </ChatLayout>
+      </>
+    
   );
 }
