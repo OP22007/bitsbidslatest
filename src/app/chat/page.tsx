@@ -99,10 +99,13 @@ export default function Chat() {
     socket.on("refresh", () => {
       fetchChats();
     });
-    socket.on("Message", () => {
-      fetchChats();
-    });
+
   }, [socket]);
+  if(socket)
+  socket.on("Message", (room) => {
+    fetchChats();
+    console.log("fetching new chat")
+  });
 
   const fetchChats = async () => {
     if (session && email) {
@@ -162,7 +165,7 @@ export default function Chat() {
           overflow: hidden;
         }
       `}</style>
-      <div id="chatbox">
+       <div id="chatbox">
         <div className="grads">
           <div
             aria-hidden="true"
@@ -212,11 +215,11 @@ export default function Chat() {
         <div  className="md:hidden absolute z-20">
     
         </div>
-              
         <div className="flex flex-col lg:flex-row w-full  overflow-y-hidden">
        
-         <div className="flex mt-12 w-8/12 bg-zinc-900  md:2/12 lg:w-3/12 min-w-56  ml-10">
-            <div className="flex flex-grow overflow-y-auto  h-5/6 flex-col w-full xl:items-start z-10 p-2 bg-zinc-800">
+         <div className="flex mt-5 w-8/12  md:2/12 lg:w-3/12 min-w-56  ml-10">
+            <div className="flex flex-grow overflow-y-auto  h-5/6 flex-col w-full xl:items-start z-10 p-2 bg-transparent">
+              <p className="text-xl font-bold ml-1">Chats</p>
               <UserList
                 sendUserProfile={handleData}
                 onlineUsers={onlineUsers}
@@ -224,73 +227,78 @@ export default function Chat() {
               />
             </div>
           </div>
+      
           <div className="flex flex-col w-full  lg:w-9/12 h-screen xl:flex items-center justify-start ml-4">
-          <div className="flex fixed bg-zinc-900  overflow-hidden  z-20 w-[1960px] h-[50px] border-b-1 border-gray-800 rounded-sm p-2">
-                <div className="flex items-center w-[2000px]">
-                <div className="ml-[50px] font-bold text-xl tracking-wide">
-                  Chats
-                </div>
-                <Divider className="w-2 h-12 ml-[285px]" orientation="vertical"/>
+          <div className="flex fixed   overflow-hidden  z-20 w-9/12 bg-black border-b-1 border-gray-800 rounded-sm p-2 pt-6">
                 <User
-                  className="ml-5"
                   name={name}
                   description={email}
                   avatarProps={{ color: "primary" }}
                   onChange={fetchChats}
                 />
               </div>
-              </div>
-            <div className={`flex flex-col w-full h-full bottom-7 overflow-y-scroll b-10 p-2 mr-5 mt-20  chat-container bg-opacity-45` }>
+            <div className={`flex flex-col w-full h-full overflow-y-scroll b-10 p-2 mt-2 rounded-xl  `} style={{backgroundImage:"url('ChatBg.jpg')",backgroundSize:'cover',backgroundPosition: 'center',backgroundRepeat: 'no-repeat'}}>
               
-              <ScrollToBottom >
-                <div className="chat-content flex-grow relative z-10 overflow-y-auto mt-24 mb-28 ">
+              <ScrollToBottom>
+
+   
+         <div className="flex-grow relative z-10 overflow-y-auto mt-24 mb-28 ">
+         <div className="autoscrollable-wrapper">
+         <div className="autoscrollable-content">
                   {chats &&
                     chats.map((chat: any, index: number) => (
                       <div
                         key={index}
                         className={`flex flex-wrap whitespace-break-spaces justify-between p-2 rounded-lg my-1 max-w-[30%] ${
                           chat.senderID === user?.email
-                            ? 'ml-auto mr-4 mb-2 bg-emerald-600 rounded-br-none'
-                            : 'mr-auto ml-4 mb-2 bg-zinc-800 rounded-bl-none'
+                            ? 'ml-auto mr-4 mb-2 bg-green-600 rounded-br-none'
+                            : 'mr-auto ml-4 mb-2 bg-gray-500 rounded-bl-none'
                         }`}
                       >
-                        <p className="text-wrap w-full break-words tracking-wide">
+                        <p className="text-wrap w-full break-words">
                           {chat.content}
                         </p>
                         <span className="text-xs opacity-65 mt-2 ml-auto">
                           {new Date(chat.createdAt).toLocaleString()}
                         </span>
+                        
                       </div>
                     ))}
+                     </div>
                 </div>
+</div>
+               
+        
               </ScrollToBottom>
+
+              <div className="absolute inset-0 bg-black opacity-50"></div>
+   
             </div>
-            <div className=" hidden lg:flex z-20 w-9/12  items-center justify-end mt-4">
-            <div className="flex">
-                <Textarea
-                  type="text"
-                  placeholder="Enter your message here..."
-                  className="chat-box  fixed right-16 bottom-1 w-[1060px] items-center"
-                  minRows={1}
-                  maxRows={5}
-                  value={inputValue}
-                  onChange={(event) => setInputValue(event.target.value)}
-                  radius="none"
-                />
-                </div>
-                <div className="options flex items-center w-full lg:w-2/12 lg:mt-0">
-                  <Button
-                    className="send h-10 fixed z-20   bottom-1 right-6 rounded-l-none z-11 bg-green-700"
-                    isIconOnly
-                    type="submit"
-                    aria-label="Send"
-                    onClick={sendMessage}
-                  >
-                 <IoSend />
-                  </Button>
-                </div>
-              </div>
+         
+      <Textarea
+        type="text"
+        placeholder="Enter your message here..."
+        className="hidden lg:flex  w-8/12 fixed z-20 right-24 p-2 bg-[#27272a] bottom-0 text-white placeholder-gray-400"
+        minRows={1}
+        maxRows={5}
+        value={inputValue}
+        onChange={(event) => setInputValue(event.target.value)}
+        radius="none"
+      />
+      <div className="options hidden lg:flex  z-20 fixed right-16 bottom-0 items-center">
+        <Button
+          className="send z-20 h-14 w-16 rounded-l-none bg-blue-700  p-4"
+          isIconOnly
+          type="submit"
+          aria-label="Send"
+          onClick={sendMessage}
+        >
+          <IoSend />
+        </Button>
+      </div>
+ 
           </div>
+         
           
         </div>
       </div>
