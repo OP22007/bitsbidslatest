@@ -10,7 +10,7 @@ const nextConfig = {
      
     
     images:{
-        domains:['nextui.org','mundum.com','utfs.io']
+        domains:['nextui.org','mundum.com','utfs.io','assets.aceternity.com','lh3.googleusercontent.com']
     },
 };
 

@@ -49,10 +49,7 @@ export type UserInput = {
   phone: UserDocument['phone'];
   email: UserDocument['email'];
   password: UserDocument['password'];
-  createdAt: UserDocument['createdAt']
-  lastLoginAt: UserDocument['lastLoginAt']
   isPremium: UserDocument['isPremium'];
-  bids:UserDocument['bids']
 };
 
  export const usersSchema = new Schema(

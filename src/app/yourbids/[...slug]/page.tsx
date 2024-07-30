@@ -88,9 +88,9 @@ export default function App() {
                         fill: true,
                         borderColor: "rgb(255,99,132)",
                         backgroundColor: "rgba(255,99,132,0.3)",
-                        hoverBackgroundColor:"green",
-                        pointHitRadius:4,
-                        pointHoverBackgroundColot:'green'
+                        hoverBackgroundColor: "green",
+                        pointHitRadius: 4,
+                        pointHoverBackgroundColor: 'green'
                     }
                 ],
             });
@@ -103,8 +103,8 @@ export default function App() {
     }, [bids, filter]);
 
     const resetZoom = () => {
-        if (chartRef.current) {
-            chartRef.current.resetZoom();
+        if (chartRef.current && chartRef.current.chartInstance) {
+            chartRef.current.chartInstance.resetZoom();
         }
     };
 
@@ -114,7 +114,7 @@ export default function App() {
                 <label>
                     Filter:
                     <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-                        <option value="today">Today's Bids</option>
+                        <option value="today">Today{"'"}s Bids</option>
                         <option value="1day">1 Day Ago</option>
                         <option value="2days">2 Days Ago</option>
                         <option value="week">A Week Ago</option>
@@ -123,14 +123,14 @@ export default function App() {
                 <button onClick={resetZoom}>Reset Zoom</button>
             </div>
             <div className="chart" style={{ width: '1000px' }}>
-                {chartData.labels && chartData.labels.length > 0 && (
-                    <Line 
+                {chartData?.labels?.length > 0 && (
+                    <Line
                         ref={chartRef}
-                        data={chartData} 
-                        options={{ 
-                            responsive: true, 
-                            plugins: { 
-                                legend: { position: "top" }, 
+                        data={chartData}
+                        options={{
+                            responsive: true,
+                            plugins: {
+                                legend: { position: "top" },
                                 title: { display: true, text: 'Filtered Bids' },
                                 zoom: {
                                     zoom: {
@@ -143,8 +143,8 @@ export default function App() {
                                         mode: 'xy',
                                     }
                                 }
-                            } 
-                        }} 
+                            }
+                        }}
                     />
                 )}
             </div>

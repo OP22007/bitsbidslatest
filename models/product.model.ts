@@ -102,5 +102,5 @@ const productsSchema = new Schema(
 
 const Product: Model<ProductDocument> = mongoose.model<ProductDocument>('Product', productsSchema);
   
-export { Product, ProductInput, ProductDocument };
+export { Product, type ProductInput, type ProductDocument };
   

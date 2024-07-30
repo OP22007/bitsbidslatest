@@ -236,10 +236,10 @@ export default function Bid() {
               </div>
             </div>
           </div>
-          <div className="w-full md:w-1/2 px-4">
+          <div className="w-full md:w-1/2 px-4 flex flex-col items-start">
             <div className="flex justify-between items-start">
               <h2 className="text-3xl tracking-wide mb-4">{product?.name}</h2>
-              <div>
+              <div className="ml-40">
                 <p
                   className="text-2xl font-semibold mr-40"
                   style={{
@@ -262,7 +262,7 @@ export default function Bid() {
                 </p>
               </div>
             </div>
-            <p className="text-zinc-400 mb-10">Seller : {seller?.name}</p>
+            <p className="text-zinc-400 mb-10 ">Seller : {seller?.name}</p>
             <Accordion
               motionProps={{
                 variants: {
@@ -318,7 +318,7 @@ export default function Bid() {
                       value={filter}
                       onChange={(e) => setFilter(e.target.value)}
                     >
-                      <option value="today">Today's Bids</option>
+                      <option value="today">Today{"'"}s Bids</option>
                       <option value="1day">1 Day Ago</option>
                       <option value="2days">2 Days Ago</option>
                       <option value="week">A Week Ago</option>
@@ -367,7 +367,7 @@ export default function Bid() {
                   <button className="px-4 py-2 bg-zinc-800 rounded-full">L</button>
                   <button className="px-4 py-2 bg-zinc-800 rounded-full">XL</button>
                 </div>
-                <u className="mb-2 underline-offset-4 text-[#999999]">
+                <u className="mb-2 underline-offset-4 text-[#999999] ml-52">
                   Sizing guide
                 </u>
               </div>

@@ -10,7 +10,7 @@ import { Avatar as MuiAvatar } from "@mui/material";
 
 // some pre processing in list to personalise list for each user
 
-export default function App({sendUserProfile,onlineUsers,currentUserEmail}){
+export default function App({sendUserProfile,onlineUsers,currentUserEmail,users}){
   
   function stringToColor(string: string) {
     let hash = 0;
@@ -29,7 +29,7 @@ export default function App({sendUserProfile,onlineUsers,currentUserEmail}){
 
     return color;
   }
-  console.log(onlineUsers)
+  // console.log(onlineUsers)
   function stringAvatar(name: string) {
     return {
       sx: {
@@ -54,38 +54,15 @@ export default function App({sendUserProfile,onlineUsers,currentUserEmail}){
                 await  sendUserProfile(userID,name, email);
       }
      console.log(currentUserEmail)
-const [users,setUsers]= useState<Array<User>>([]);
-const getUsers =async ()=>{
-  try {
-    const response  = await fetch("http://localhost:3000/api/getusers",{
-        method :"GET",
-    })
-    if(response){
-        const data = await response.json();
-        const filteredUsers = data.users.filter(
-          (user: User) => user.email !== currentUserEmail
-        );
-        setUsers(filteredUsers);
 
-    }
-}
-    catch(err)
-    {
-        console.log(err)
-    }
-
-  };
-  useEffect(()=>{
-    getUsers();
-  },[onlineUsers]);
   return (
     <>
-    <div id="userList flex flex-col" className="userlist mt-2 mb-40 ">
+    <div id="userList flex flex-col" className="userlist h-full mb-1">
      
     {
         users.map((element)=>(
            <>
-            <div key={element.userID} className="my-1 cursor-pointer  p-2 rounded-xl hover:bg-neutral-700" onClick={()=>{OpenChat(element.userID,element.name, element.email)}}>
+            <div key={element.userID} className="my-1 cursor-pointer  p-2 rounded-xl hover:bg-neutral-800" onClick={()=>{OpenChat(element.userID,element.name, element.email)}}>
                 <div   
                 className="flex"
                 style={{alignItems:'center'}}

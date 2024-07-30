@@ -10,7 +10,8 @@ import { Socket, io } from "socket.io-client";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { Avatar as MuiAvatar } from "@mui/material";
 import { IoSend } from "react-icons/io5";
-import EmojiPicker from 'emoji-picker-react'
+import EmojiPicker from "emoji-picker-react";
+import { SidebarDemo } from "../components/ChatSidebar";
 
 export default function Chat() {
   const { data: session } = useSession();
@@ -23,7 +24,7 @@ export default function Chat() {
   const [roomCode, setRoomcode] = useState<string>("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
-    
+
   console.log("onlineUsers", onlineUsers);
   function stringToColor(string: string) {
     let hash = 0;
@@ -42,7 +43,7 @@ export default function Chat() {
 
     return color;
   }
-  function stringAvatar(name: string) {   
+  function stringAvatar(name: string) {
     return {
       sx: {
         bgcolor: stringToColor(name),
@@ -86,13 +87,17 @@ export default function Chat() {
     }
   }, [email, session]);
 
-  const handleData = async (userID: string, username: string, useremail: string) => {
+  const handleData = async (
+    userID: string,
+    username: string,
+    useremail: string
+  ) => {
     setReceiverID(userID);
     setName(username);
     setEmail(useremail);
     await createRoomCode();
     fetchChats();
-  }
+  };
 
   useEffect(() => {
     if (socket == null) return;
@@ -106,10 +111,16 @@ export default function Chat() {
 
   const fetchChats = async () => {
     if (session && email) {
-      const roomName = roomCode || (user?.email?.localeCompare(email) === -1 ? user?.email + email : email + user?.email);
+      const roomName =
+        roomCode ||
+        (user?.email?.localeCompare(email) === -1
+          ? user?.email + email
+          : email + user?.email);
       try {
         const response = await fetch(
-          `http://localhost:3000/api/getchats?ChatID=${encodeURIComponent(roomName)}`,
+          `http://localhost:3000/api/getchats?ChatID=${encodeURIComponent(
+            roomName
+          )}`,
           {
             method: "GET",
           }
@@ -138,7 +149,8 @@ export default function Chat() {
       message: inputValue,
     };
 
-    if (socket) socket.emit("private message", email, inputValue, senderEmail, roomCode);
+    if (socket)
+      socket.emit("private message", email, inputValue, senderEmail, roomCode);
 
     try {
       const res = await fetch("http://localhost:3000/api/addchats", {
@@ -162,7 +174,8 @@ export default function Chat() {
           overflow: hidden;
         }
       `}</style>
-      <div id="chatbox">
+      <SidebarDemo />
+      {/* <div id="chatbox">
         <div className="grads">
           <div
             aria-hidden="true"
@@ -293,7 +306,7 @@ export default function Chat() {
           </div>
           
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

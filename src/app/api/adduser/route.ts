@@ -26,7 +26,7 @@ export async function POST(req:NextRequest){
       phone,
       email,
       password: hashPassword(password),
-      enabled,
+      isPremium:false
     };
     const client = await clientPromise;
     const db = client.db("BITSBids");

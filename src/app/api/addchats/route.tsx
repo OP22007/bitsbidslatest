@@ -24,9 +24,9 @@ export async function POST(req: NextRequest) {
         const createdAt = new Date();
 
         const chatInput: ChatInput = {
-            ChatID,
+            chatID: ChatID,
             participants: { senderID, receiverID },
-            messages: [{ id: messageID, content: message, createdAt, senderID }],
+            messages: [{ id: messageID,senderID:senderID, receiverID:receiverID,content: message, createdAt:createdAt}],
         };
 
         // Get the MongoDB client and database
@@ -38,9 +38,11 @@ export async function POST(req: NextRequest) {
         const existingChat = await chatCollection.findOne({ ChatID });
               
         if (existingChat) {
+            let messages = existingChat.messages
+            messages.push(chatInput.messages[0])
             await chatCollection.updateOne(
                 { ChatID },
-                { $push: { messages: chatInput.messages[0] } }
+                { $set: { messages: messages } }
 
             );
             return new NextResponse(JSON.stringify({ success: "Message saved successfully" }), { status: 200 });

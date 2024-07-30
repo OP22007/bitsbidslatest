@@ -1,9 +1,10 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export type Message = {
+  id:string;
   senderID: string;
   receiverID: string;
-  message: string;
+  content: string;
   createdAt: Date;
 };
 
@@ -30,7 +31,7 @@ export const messageSchema = new Schema({
 
 export interface ChatRoomDocument extends Document {
   chatRoomID: string;
-  participants: string[];
+  participants: Object;
   messages: Message[];
 }
 export type ChatInput ={
